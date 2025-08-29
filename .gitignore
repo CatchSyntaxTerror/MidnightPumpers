@@ -25,6 +25,7 @@ replay_pid*
 
 # Idea Folder
 .idea/
+.idea/*
 
 # iml file
 MidnightPumpers.iml
