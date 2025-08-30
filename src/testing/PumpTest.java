@@ -2,6 +2,7 @@ package testing;
 
 import NewIOPort.IOPort;
 import NewIOPort.IOPortClient;
+import NewIOPort.PortAddresses;
 
 public class PumpTest {
     //This is just a test of the current socket wrapper,
@@ -14,7 +15,7 @@ public class PumpTest {
     }
 
     public static void main(String [] args){
-        PumpTest pumpTest=new PumpTest("127.0.0.1", 12345);
+        PumpTest pumpTest=new PumpTest("localhost", PortAddresses.PUMP_PORT);
         System.out.println(pumpTest.statusTest.read().toString());
     }
 }

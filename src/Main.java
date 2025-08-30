@@ -1,6 +1,7 @@
 import NewIOPort.IOPort;
 import NewIOPort.IOPortClient;
 import NewIOPort.IOPortServer;
+import NewIOPort.PortAddresses;
 
 
 /**
@@ -10,8 +11,7 @@ import NewIOPort.IOPortServer;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello World");
-        IOPort statusIshtest = new IOPortServer("127.0.0.1", 12345);
+        IOPort statusIshtest = new IOPortServer("localhost", PortAddresses.PUMP_PORT);
         statusIshtest.send("PING");
 
     }

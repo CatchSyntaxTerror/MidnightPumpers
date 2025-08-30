@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="40c6b940-2a57-49de-b32b-0887103dae95" name="Changes" comment="renamed">
-      <change afterPath="$PROJECT_DIR$/src/NewIOPort/PortAddresses.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="40c6b940-2a57-49de-b32b-0887103dae95" name="Changes" comment="Added addresses and deleted old classes">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MidnightPumpers.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MidnightPumpers.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NewIOPort/IOPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NewIOPort/IOPort.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NewIOPort/IOPortClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NewIOPort/IOPortClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NewIOPort/IOPortServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NewIOPort/IOPortServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NewIOPort/PortAddresses.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NewIOPort/PortAddresses.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/testing/PumpTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/testing/PumpTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +38,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;git@github.com:CatchSyntaxTerror/MidnightPumpers.git&quot;,
-    &quot;accountId&quot;: &quot;e29d3687-c470-475e-96d2-542070683a7a&quot;
+    &quot;accountId&quot;: &quot;1211d87e-0231-4616-8672-51641587f8ef&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -47,18 +52,46 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Run",
+    "Application.PumpTest.executor": "Run",
+    "Application.ScreenUI.executor": "Run",
+    "Application.Unnamed.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Project",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="21" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="MidnightPumpers" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\youss\.jdks\openjfx-21.0.7_windows-x64_bin-sdk\javafx-sdk-21.0.7\lib&quot; --add-modules javafx.controls,javafx.fxml " />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26094.121" />
+        <option value="bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-IU-251.26094.121" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -67,7 +100,25 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1756553044176</updated>
+      <workItem from="1756583251801" duration="335000" />
+      <workItem from="1756583598772" duration="1751000" />
     </task>
+    <task id="LOCAL-00001" summary="Added addresses and deleted old classes">
+      <option name="closed" value="true" />
+      <created>1756583165367</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1756583165367</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added addresses and deleted old classes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added addresses and deleted old classes" />
   </component>
 </project>

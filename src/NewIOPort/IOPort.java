@@ -1,5 +1,9 @@
 package NewIOPort;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.util.concurrent.BlockingQueue;
+
 /**
  * This class will be extended by IOPortClient and IOPortServer
  * When we create an instance of this socket wrapper we will create it like
@@ -7,9 +11,11 @@ package NewIOPort;
  * IOPort communicator = new IOPortClient("LocalHost",1234)
  */
 public abstract class IOPort {
-    //Not private anymore(Thank you Youssef(my bad king))
+    //Not private anymore(Thank you, Youssef(my bad king))
     protected String host;   //Should be local host
-    protected final int address;  //Some nonreserved port number
+    protected final int address;//Some nonreserved port number
+    protected BufferedReader listener;
+    protected BufferedWriter writer;
 
     /**
      * Creates an IO port instance, should be called with the child class
@@ -19,7 +25,6 @@ public abstract class IOPort {
     public IOPort(String host,int address){
         this.host=host;
         this.address=address;
-
     }
 
     /**

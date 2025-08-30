@@ -5,9 +5,7 @@ import java.net.Socket;
 
 public class IOPortClient extends IOPort{
     protected Socket socket;
-    protected BufferedReader listener;
-    protected BufferedWriter writer;
-    protected Object lastResponce= null;
+    protected Object lastResponse = null;
 
     /**
      * Creates an IO port instance, should be called with the child class
@@ -67,12 +65,10 @@ public class IOPortClient extends IOPort{
          */
         @Override
         public void send(Object message) {
-            //mabye just make it a string idk how the xml stuff he wants goes
             String sHeader=message.toString();
             try {
                 writer.write(sHeader);
                 writer.newLine();
-                //New line? Idk
                 writer.flush();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -100,11 +96,10 @@ public class IOPortClient extends IOPort{
         @Override
         public Object read(){
             try {
-                String responce= listener.readLine();
-                lastResponce=responce; //Saves it in the 'wire'/'board'
-                //flush input stream??
-                System.out.println(responce);
-                return responce;
+                String response = listener.readLine();
+                lastResponse = response; //Saves it in the 'wire'/'board'
+                System.out.println(response);
+                return response;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -129,12 +124,10 @@ public class IOPortClient extends IOPort{
          */
         @Override
         public void send(Object message) {
-            //mabye just make it a string idk how the xml stuff he wants goes
             String sHeader=message.toString();
             try {
                 writer.write(sHeader);
                 writer.newLine();
-                //New line? Idk
                 writer.flush();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -149,10 +142,10 @@ public class IOPortClient extends IOPort{
         @Override
         public Object get(){
             try {
-                String responce= listener.readLine();
+                String response= listener.readLine();
                 //flush input stream??
-                System.out.println(responce);
-                return responce;
+                System.out.println(response);
+                return response;
                 //Handle response?????
             } catch (IOException e) {
                 throw new RuntimeException(e);

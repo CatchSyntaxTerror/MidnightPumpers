@@ -5,8 +5,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class IOPortServer extends IOPort {
-    private BufferedReader listener;
-    private BufferedWriter writer;
     private ServerSocket serverSocket;
 
     public IOPortServer(String host, int address) {
@@ -28,7 +26,6 @@ public class IOPortServer extends IOPort {
 
 
     private void handleClient(Socket socket) {
-        //TODO: Spawn a new thread per client
         try{
             listener = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -55,11 +52,11 @@ public class IOPortServer extends IOPort {
 
     @Override
     public void send(Object message) {
+        System.out.println("sending " + message);
         String sMessage =message.toString();
         try {
             writer.write(sMessage);
             writer.newLine();
-            //New line? Idk
             writer.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
