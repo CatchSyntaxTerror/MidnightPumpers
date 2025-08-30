@@ -241,7 +241,7 @@ public class ScreenUI extends Application {
 
 
     /**
-     * Notify the Main System of the screen button state, via the Communicator
+     * Notify the testing.Main System of the screen button state, via the Communicator
      * IO Port
      */
     private void notifyListener(int pressedBtn) {
@@ -250,7 +250,7 @@ public class ScreenUI extends Application {
     }
 
     /**
-     * for communicating with the Main System
+     * for communicating with the testing.Main System
      * @param pressedBtn the responsive button responsible for the notify call
      * @return the screens current state
      */
