@@ -13,12 +13,10 @@ public class IOPortServer extends IOPort {
             serverSocket = new ServerSocket(address);
             System.out.println("prot: " + address);
 
-            while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("address " + clientSocket.getInetAddress());
 
                 handleClient(clientSocket);
-            }
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }

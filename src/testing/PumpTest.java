@@ -15,7 +15,9 @@ public class PumpTest {
     }
 
     public static void main(String [] args){
+        System.out.println("Starting PumpTest");
         PumpTest pumpTest=new PumpTest("localhost", PortAddresses.PUMP_PORT);
         System.out.println(pumpTest.statusTest.read().toString());
+        System.out.println("Stopping PumpTest");
     }
 }
