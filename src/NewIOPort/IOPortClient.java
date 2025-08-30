@@ -7,7 +7,7 @@ public class IOPortClient extends IOPort{
     protected Socket socket;
     protected BufferedReader listener;
     protected BufferedWriter writer;
-    private Object lastResponce= null;
+    protected Object lastResponce= null;
 
     /**
      * Creates an IO port instance, should be called with the child class
@@ -48,9 +48,7 @@ public class IOPortClient extends IOPort{
 
     }
 
-
-
-    public class Actuator extends IOPortClient{
+    public static class Actuator extends IOPortClient{
 
         /**
          * Creates an IO port instance, should be called with the child class
@@ -83,7 +81,7 @@ public class IOPortClient extends IOPort{
         }
 
     }
-    public class Status extends IOPortClient{
+    public static class Status extends IOPortClient{
         /**
          * Creates an IO port instance, should be called with the child class
          *
@@ -113,7 +111,7 @@ public class IOPortClient extends IOPort{
         }
 
     }
-    public class Communicator extends IOPortClient{
+    public static class Communicator extends IOPortClient{
         /**
          * Creates an IO port instance, should be called with the child class
          *
@@ -162,5 +160,6 @@ public class IOPortClient extends IOPort{
         }
 
     }
+
 
 }
