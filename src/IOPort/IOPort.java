@@ -1,12 +1,14 @@
+package IOPort;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class IOPort {
-    private String host;
+    private final String host;
     private final int address;
     private Socket socket;
-    private BufferedReader listner;
+    private BufferedReader listener;
     private BufferedWriter writer;
     private ServerSocket serverSocket;
 
@@ -54,7 +56,7 @@ public class IOPort {
      */
     public Object get(){
         try {
-            String responce= listner.readLine();
+            String responce= listener.readLine();
             //flush input stream??
             System.out.println(responce);
             return responce;
@@ -73,7 +75,7 @@ public class IOPort {
      */
     public Object read(){
         try {
-            String responce= listner.readLine();
+            String responce= listener.readLine();
             lastResponce=responce;
             //flush input stream??
             System.out.println(responce);
@@ -91,7 +93,7 @@ public class IOPort {
     private boolean connect() {
         try {
             socket=new Socket(host, address);
-            listner = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            listener = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             System.out.println("connected to server/parent at " + host + ":" + address);
             return true;
@@ -111,7 +113,7 @@ public class IOPort {
 
     private boolean disconnect() {
         try {
-            listner.close();
+            listener.close();
             writer.close();
             socket.close();
         } catch (IOException e) {

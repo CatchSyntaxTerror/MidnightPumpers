@@ -1,9 +1,11 @@
+package IOPort;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class IOPortServer extends IOPortP{
-    private BufferedReader listner;
+public class IOPortServer extends IOPortP {
+    private BufferedReader listener;
     private BufferedWriter writer;
     private ServerSocket serverSocket;
 
@@ -30,11 +32,11 @@ public class IOPortServer extends IOPortP{
     private void handleClient(Socket socket) {
         //TODO: Spawn a new thread per client
         try{
-            listner = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            listener = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
             String line;
-            while ((line = listner.readLine()) != null) {
+            while ((line = listener.readLine()) != null) {
                 System.out.println("input:" + line);
 //                String response = handle(line);
 //                output.write(response);
