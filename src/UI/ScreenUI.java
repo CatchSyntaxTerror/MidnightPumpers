@@ -5,8 +5,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 
@@ -15,16 +16,24 @@ import javafx.stage.Stage;
  * The Screen GUI
  */
 public class ScreenUI extends Application {
-    private GridPane                  gp; // the meat of the display
-    private int selectedBtn       =   -1; // the fuel grade selection
-    private final double HORZ     =    1; // the horizontal gap of the grid
-    private final double VERT     =    1; // the vertical gap of the grid
-    private final double DISP_W   =  300; // the GUI's width
-    private final double DISP_H   =  250; // the GUI's height
-    private final int  NUM_COLS   =    4; // number of columns on the grid
-    private final int  NUM_ROWS   =    5; // number of columns on the grid
-    private final int  BTN_FACTOR =    8; /* buttons take up an eighth of the
+    // Constants:
+    private final int NULL_BTN    =  -1; // signifies no button selected
+    private final double HORZ     =   1; // the horizontal gap of the grid
+    private final double VERT     =   1; // the vertical gap of the grid
+    private final double DISP_W   = 300; // the GUI's initial width
+    private final double DISP_H   = 250; // the GUI's initial height
+    private final int  NUM_COLS   =   4; // number of columns on the grid
+    private final int  NUM_ROWS   =   5; // number of columns on the grid
+    private final int  BTN_FACTOR =   8; /* buttons take up an eighth of the
                                              horizontal space */
+    // CSS Style Strings
+    private final String SELECTED_CLR   = "-fx-background-color: lightblue;";
+    private final String UNSELECTED_CLR = "-fx-background-color: lightgray;";
+
+    // Non-Constant Global Variables:
+    private GridPane          gridPane; // the meat of the display
+    private ToggleGroup    toggleGroup; // For mutually exclusive buttons
+    private int selectedBtn = NULL_BTN; // the fuel grade selection
 
     /**
      * launches JavaFX application
@@ -38,11 +47,39 @@ public class ScreenUI extends Application {
      * The screen constructor
      */
     public ScreenUI() {
-        gp = new GridPane(HORZ, VERT);
+        resetGrid();
+    }
+    /**
+     * Set up the grid
+     */
+    private void resetGrid() {
+        //TODO: redraw display after a call to resetGrid()
+        gridPane = new GridPane(HORZ, VERT);
+        selectedBtn = NULL_BTN;
         setGridConstraints();
+        setUpToggleGroup();
+
         //TODO: delete these methods, they are for testing purposes
         createButtons();
         createTextBoxes();
+    }
+
+    /**
+     * Establishes multi-select behavior
+     */
+    private void setUpToggleGroup() {
+        toggleGroup = new ToggleGroup();
+        toggleGroup.selectedToggleProperty().addListener(
+                (observable, oldToggle, newToggle) -> {
+            if (newToggle != null) {
+                // Set selected button color
+                ((ToggleButton) newToggle).setStyle(SELECTED_CLR);
+            }
+            if (oldToggle != null) {
+                // Set unselected button color
+                ((ToggleButton) oldToggle).setStyle(UNSELECTED_CLR);
+            }
+        });
     }
 
     /**
@@ -65,7 +102,7 @@ public class ScreenUI extends Application {
             /* For each column, set the column constraints to a percent of the
                screen width */
             col = new ColumnConstraints();
-            gp.getColumnConstraints().add(col);
+            gridPane.getColumnConstraints().add(col);
             if(i != 0 && i != (NUM_COLS - 1)) {
                 // Text columns have less width
                 col.setPercentWidth(txtPercent);
@@ -79,8 +116,8 @@ public class ScreenUI extends Application {
             /* For each row, set the row constraints to a percent of the screen
                height*/
             row = new RowConstraints();
-            gp.getRowConstraints().add(row);
-            row.setPercentHeight(txtPercent);
+            gridPane.getRowConstraints().add(row);
+            row.setPercentHeight(rowPercent);
         }
 
     }
@@ -90,6 +127,7 @@ public class ScreenUI extends Application {
      * This method is for testing purposes
      */
     private void createTextBoxes() {
+        //TODO: text box creation
         for (int i = 0; i < 10; i++) {
             Label lbl;
             int rowI = i / 2;
@@ -107,9 +145,9 @@ public class ScreenUI extends Application {
 
     /**
      * Add this label to the grid
-     * @param row
-     * @param col
-     * @return
+     * @param row the row of the grid to add the label
+     * @param col the column of the grid to add the label
+     * @return the created label
      */
     private Label createLbl(int row, int col) {
         Label lbl = new Label("lorem ipsum");
@@ -120,12 +158,8 @@ public class ScreenUI extends Application {
         HBox.setHgrow(lbl, Priority.ALWAYS);
         hBox.setAlignment(Pos.CENTER);
 
-        gp.add(hBox, col, row);
+        gridPane.add(hBox, col, row);
         return lbl;
-    }
-
-    //    private void createText()
-    private void createText(int rowI, int i) {
     }
 
     /**
@@ -133,28 +167,31 @@ public class ScreenUI extends Application {
      * This method is for testing purposes
      */
     private void createButtons() {
-        for (int i = 0; i < 10; i++) {
-            createBtn(i, ButtonType.RESPONSIVE);
+        for (int i = 0; i < 9; i++) {
+            createBtn(i, ButtonType.MUTUALLY_EXCLUSIVE);
         }
+        createBtn(9, ButtonType.RESPONSIVE);
     }
-    /* TODO: redo button creation to make mutually exclusive buttons display
-       properly */
+
     /**
      Create a button at this row and this column in the display
      * @param row, the row to create a button at
      * @param col, the column to create a button at
      * @return that button
      */
-    private Button createBtn(int row, int col) {
-        Button btn = new Button();
+    private ToggleButton createBtn(int row, int col) {
+        ToggleButton btn = new ToggleButton();
         HBox hBox = new HBox(0, btn);
 
-        //Some stuff for prettiness
+        //Resizability
         btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox.setHgrow(btn, Priority.ALWAYS);
         hBox.setAlignment(Pos.CENTER);
 
-        gp.add(hBox, col, row);
+        //Coloring
+        btn.setStyle(UNSELECTED_CLR);
+
+        gridPane.add(hBox, col, row);
         return btn;
     }
 
@@ -163,8 +200,8 @@ public class ScreenUI extends Application {
      * @param btnNum the number that signifies this button
      * @return the created button
      */
-    private Button createBtn(int btnNum) {
-        Button btn;
+    private ToggleButton createBtn(int btnNum) {
+        ToggleButton btn;
         int rowI = btnNum / 2;
 
         if(btnNum % 2 == 0) {
@@ -183,20 +220,25 @@ public class ScreenUI extends Application {
      * @param btnType the type of this button
      */
     private void createBtn(int btnNumber, ButtonType btnType) {
-        Button btn = createBtn(btnNumber);
+        ToggleButton btn = createBtn(btnNumber);
         if (btnType == ButtonType.RESPONSIVE) {
-            /* Responsive buttons need to notify all listeners of the screen
-            state */
+            // Responsive Button
             btn.setOnMouseClicked(event -> {
+                // Notify the Communicator and reset the grid
                 notifyListener(btnNumber);
+                resetGrid();
             });
         } else {
+            // Multi-Select Button, add it to the toggle group
+            btn.setToggleGroup(toggleGroup);
+
             btn.setOnMouseClicked(event -> {
-                btn.setStyle("-fx-background-color: red;");
+                // Track the number associated with this button
                 selectedBtn = btnNumber;
             });
         }
     }
+
 
     /**
      * Notify the Main System of the screen button state, via the Communicator
@@ -216,14 +258,14 @@ public class ScreenUI extends Application {
         //TODO: make more modular? State object rather than String?
         //TODO: make sure everyone is on the same page about button messaging
         // info
-        if (selectedBtn == -1) {
+        if (selectedBtn == NULL_BTN) {
             // No button selected, only notify of the responsive button press
             return pressedBtn + ";";
         } else {
             /* Return fuel grade selection and responsive button, and reset 
             button selection */
             int val = selectedBtn;
-            selectedBtn = -1;
+            selectedBtn = NULL_BTN;
             return pressedBtn + ":" + val + ";";
         }
     }
@@ -233,7 +275,7 @@ public class ScreenUI extends Application {
      * @return the grid pane (for display purposes)
      */
     private Parent getScene() {
-        return gp;
+        return gridPane;
     }
     /**
      * The main entry point for all JavaFX applications.
