@@ -4,12 +4,12 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class IOPortServer extends IOPortP {
+public class IOPortServerOld extends IOPortP {
     private BufferedReader listener;
     private BufferedWriter writer;
     private ServerSocket serverSocket;
 
-    public IOPortServer(String host, int address) {
+    public IOPortServerOld(String host, int address) {
         super(host, address);
 
 

@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class IOPort {
+public class IOPortOLD {
     private final String host;
     private final int address;
     private Socket socket;
@@ -21,7 +21,7 @@ public class IOPort {
      * @param address the address, found in the config file
      */
 
-    public IOPort(String host,int address,boolean server){
+    public IOPortOLD(String host, int address, boolean server){
         this.host=host;
         this.address=address;
 
