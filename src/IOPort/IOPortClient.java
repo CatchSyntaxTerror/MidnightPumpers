@@ -42,22 +42,17 @@ public abstract class IOPortClient {
 
     protected void connect(int n) {
         try {
-            CLIENT_SOCKET=new Socket(HOST, PORT);
-
-
-        }catch (Exception e){
+            CLIENT_SOCKET = new Socket(HOST, PORT);
+        } catch (Exception e) {
             try {
                 Thread.sleep(1000);
-                if(n<15){
-                    connect(n+1);
+                if (n < 15) {
+                    connect(n + 1);
                 }
-
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             }
-
         }
-
     }
 }
 
