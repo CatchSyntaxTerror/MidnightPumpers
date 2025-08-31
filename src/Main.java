@@ -11,7 +11,7 @@ import java.util.UUID;
 
 /**
  * Authors: Youssef, Valerie, Joel, Natalie, Danny
- * This is the main class
+ * This is the main class It manages communication for all components of the Gas Pump
  */
 
 public class Main {
@@ -26,6 +26,10 @@ public class Main {
     private static Map<UUID, IOPortClient> ioPortClients;
     private static Server SERVER;
 
+    /**
+     * Instantiates server Runnables for Server class
+     * @return HashMap of runnables to be passed to Server
+     */
     private static Map<UUID, IOPortServer> initializeServers(){
         PUMP = new Actuator(PortAddresses.PUMP_PORT);
         SCREEN = new CommunicatorServer(PortAddresses.SCREEN_PORT);
@@ -39,6 +43,10 @@ public class Main {
         return ioPortServers;
     }
 
+    /**
+     * Instatiates client Runnables for Server class
+     * @return HashMaps of Runnables to be passed to Server
+     */
     private static Map<UUID,IOPortClient> initializeClients(){
         CC_READER = new Status(PortAddresses.CARD_READER_PORT);
         NOZZLE = new Status(PortAddresses.HOSE_PORT);
@@ -50,6 +58,10 @@ public class Main {
         return ioPortClients;
     }
 
+    /**
+     * This is where the magic happens
+     * @param args N/A
+     */
     public static void main(String[] args) {
         ioPortServers = initializeServers();
         ioPortClients = initializeClients();
