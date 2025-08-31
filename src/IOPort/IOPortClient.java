@@ -1,18 +1,15 @@
-package IOPort2;
+package IOPort;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * This class is meant to be instantiated by main
+ * This class is meant to be instantiated by JavaFX applications
  * Author: Youssef Amin, Natalie Onion
  */
-public abstract class IOPortServer2 {
-    protected ServerSocket SERVER_SOCKET;
+public abstract class IOPortClient {
     public Socket CLIENT_SOCKET;
     protected int PORT;
     protected String HOST;
@@ -21,10 +18,9 @@ public abstract class IOPortServer2 {
     PrintWriter WRITER;
     boolean ON;
 
-    public IOPortServer2(int port) {
+    public IOPortClient(int port) {
         this.PORT = port;
         this.HOST = "localhost";
-        BlockingQueue<String> queue = new LinkedBlockingQueue<>();
     }
 
     /**
@@ -43,3 +39,5 @@ public abstract class IOPortServer2 {
 
     public abstract void receive();
 }
+
+

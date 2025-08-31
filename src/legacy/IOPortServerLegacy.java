@@ -4,10 +4,10 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class IOPortServer extends IOPort {
+public class IOPortServerLegacy extends IOPort {
     private ServerSocket serverSocket;
 
-    public IOPortServer(String host, int address) {
+    public IOPortServerLegacy(String host, int address) {
         super(host, address);
         try {
             serverSocket = new ServerSocket(address);

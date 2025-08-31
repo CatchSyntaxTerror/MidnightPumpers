@@ -1,4 +1,4 @@
-package IOPort2;
+package IOPort;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Status does not send messages only receives and executes
  * Author: Youssef Amin, Natalie Onion
  */
-public class Status extends IOPortClient2 implements Runnable {
+public class Status extends IOPortClient implements Runnable {
     public Status(int port) {
         super(port);
         try {

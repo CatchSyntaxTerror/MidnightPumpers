@@ -1,6 +1,6 @@
 package testing;
 
-import IOPort2.CommunicatorClient;
+import IOPort.CommunicatorClient;
 import util.PortAddresses;
 
 /**

@@ -1,4 +1,4 @@
-package IOPort2;
+package IOPort;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -8,7 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Communicator class is an instance of both
  * Author: Youssef Amin, Natalie Onion
  */
-public class CommunicatorServer extends IOPortServer2 implements Runnable {
+public class CommunicatorServer extends IOPortServer implements Runnable {
 
     public CommunicatorServer(int port) {
         super(port);

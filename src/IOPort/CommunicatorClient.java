@@ -1,22 +1,22 @@
-package IOPort2;
+package IOPort;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Actuator only sends messages cant read or peek
+ * The client side of the Communicator. For JavaFX
  * Author: Youssef Amin, Natalie Onion
  */
-public class Actuator extends IOPortServer2 implements Runnable {
-    public Actuator(int port) {
+public class CommunicatorClient extends IOPortClient implements Runnable {
+
+    public CommunicatorClient(int port) {
         super(port);
         try {
-            SERVER_SOCKET = new ServerSocket(port);
-            CLIENT_SOCKET = SERVER_SOCKET.accept();
+            CLIENT_SOCKET = new Socket(HOST, port);
             LISTENER = new BufferedReader(new InputStreamReader(CLIENT_SOCKET.getInputStream()));
             WRITER = new PrintWriter(CLIENT_SOCKET.getOutputStream(), true);
             System.out.println("Server listening on port " + port);
@@ -27,17 +27,17 @@ public class Actuator extends IOPortServer2 implements Runnable {
     }
 
     /**
-     * closes client socket and then server socket
+     * closes sockets gracefully
      */
     @Override
     public void close() {
         try {
             CLIENT_SOCKET.close();
-            SERVER_SOCKET.close();
             System.out.println("Server closed");
             ON = false;
         } catch (IOException e) {
-            System.out.println("Could not close client/server socket");
+            System.out.println("Could not close client socket");
+            throw new RuntimeException(e);
         }
     }
 
@@ -52,23 +52,23 @@ public class Actuator extends IOPortServer2 implements Runnable {
     }
 
     /**
-     * doesnt matter, dont use it
+     * get messages and place in blocking queue
      */
     @Override
     public String get() {
-        System.out.println("You Shouldn't be using this");
-        ON = false;
-        throw new UnsupportedOperationException();
+        try {
+            return INBOX.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
-     *  doesnt matter, dont use it
+     * peak at blocking queue
      */
     @Override
     public String read() {
-        System.out.println("You Shouldn't be using this");
-        ON = false;
-        throw new UnsupportedOperationException();
+        return INBOX.peek();
     }
 
     /**
@@ -79,7 +79,7 @@ public class Actuator extends IOPortServer2 implements Runnable {
         try {
             INBOX.add(LISTENER.readLine());
         } catch (IOException e) {
-            System.out.println("closing server");
+            System.out.println("Closing server");
             close();
         }
     }

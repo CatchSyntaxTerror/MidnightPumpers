@@ -1,7 +1,7 @@
 package testing;
 
 import legacy.IOPort;
-import legacy.IOPortClient;
+import legacy.IOPortClientLegacy;
 import util.PortAddresses;
 
 public class PumpTest {
@@ -11,7 +11,7 @@ public class PumpTest {
     //the pump can only read, the actuator can only send
     IOPort statusTest;
     public PumpTest(String host,int address){
-        statusTest=new IOPortClient.Status(host,address);
+        statusTest=new IOPortClientLegacy.Status(host,address);
     }
 
     public static void main(String [] args){

@@ -1,5 +1,5 @@
 import legacy.IOPort;
-import legacy.IOPortServer;
+import legacy.IOPortServerLegacy;
 import util.PortAddresses;
 
 
@@ -10,7 +10,7 @@ import util.PortAddresses;
 
 public class Main {
     public static void main(String[] args) {
-        IOPort statusIshtest = new IOPortServer("localhost", PortAddresses.PUMP_PORT);
+        IOPort statusIshtest = new IOPortServerLegacy("localhost", PortAddresses.PUMP_PORT);
         statusIshtest.send("PING");
 
     }

@@ -1,22 +1,22 @@
-package IOPort2;
+package IOPort;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.ServerSocket;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * The client side of the Communicator. For JavaFX
+ * Actuator only sends messages cant read or peek
  * Author: Youssef Amin, Natalie Onion
  */
-public class CommunicatorClient extends IOPortClient2 implements Runnable {
-
-    public CommunicatorClient(int port) {
+public class Actuator extends IOPortServer implements Runnable {
+    public Actuator(int port) {
         super(port);
         try {
-            CLIENT_SOCKET = new Socket(HOST, port);
+            SERVER_SOCKET = new ServerSocket(port);
+            CLIENT_SOCKET = SERVER_SOCKET.accept();
             LISTENER = new BufferedReader(new InputStreamReader(CLIENT_SOCKET.getInputStream()));
             WRITER = new PrintWriter(CLIENT_SOCKET.getOutputStream(), true);
             System.out.println("Server listening on port " + port);
@@ -27,17 +27,17 @@ public class CommunicatorClient extends IOPortClient2 implements Runnable {
     }
 
     /**
-     * closes sockets gracefully
+     * closes client socket and then server socket
      */
     @Override
     public void close() {
         try {
             CLIENT_SOCKET.close();
+            SERVER_SOCKET.close();
             System.out.println("Server closed");
             ON = false;
         } catch (IOException e) {
-            System.out.println("Could not close client socket");
-            throw new RuntimeException(e);
+            System.out.println("Could not close client/server socket");
         }
     }
 
@@ -52,23 +52,23 @@ public class CommunicatorClient extends IOPortClient2 implements Runnable {
     }
 
     /**
-     * get messages and place in blocking queue
+     * doesnt matter, dont use it
      */
     @Override
     public String get() {
-        try {
-            return INBOX.take();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println("You Shouldn't be using this");
+        ON = false;
+        throw new UnsupportedOperationException();
     }
 
     /**
-     * peak at blocking queue
+     *  doesnt matter, dont use it
      */
     @Override
     public String read() {
-        return INBOX.peek();
+        System.out.println("You Shouldn't be using this");
+        ON = false;
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -79,7 +79,7 @@ public class CommunicatorClient extends IOPortClient2 implements Runnable {
         try {
             INBOX.add(LISTENER.readLine());
         } catch (IOException e) {
-            System.out.println("Closing server");
+            System.out.println("closing server");
             close();
         }
     }

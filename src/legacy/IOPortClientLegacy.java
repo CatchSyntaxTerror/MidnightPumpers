@@ -3,7 +3,7 @@ package legacy;
 import java.io.*;
 import java.net.Socket;
 
-public class IOPortClient extends IOPort{
+public class IOPortClientLegacy extends IOPort{
     protected Socket socket;
     protected Object lastResponse = null;
 
@@ -13,7 +13,7 @@ public class IOPortClient extends IOPort{
      * @param host    The server host
      * @param address the server address
      */
-    public IOPortClient(String host, int address) {
+    public IOPortClientLegacy(String host, int address) {
         super(host, address);
         //Try to connect to socket and set up input/output
         try {
@@ -46,7 +46,7 @@ public class IOPortClient extends IOPort{
 
     }
 
-    public static class Actuator extends IOPortClient{
+    public static class Actuator extends IOPortClientLegacy {
 
         /**
          * Creates an IO port instance, should be called with the child class
@@ -77,7 +77,7 @@ public class IOPortClient extends IOPort{
         }
 
     }
-    public static class Status extends IOPortClient{
+    public static class Status extends IOPortClientLegacy {
         /**
          * Creates an IO port instance, should be called with the child class
          *
@@ -106,7 +106,7 @@ public class IOPortClient extends IOPort{
         }
 
     }
-    public static class Communicator extends IOPortClient{
+    public static class Communicator extends IOPortClientLegacy {
         /**
          * Creates an IO port instance, should be called with the child class
          *
