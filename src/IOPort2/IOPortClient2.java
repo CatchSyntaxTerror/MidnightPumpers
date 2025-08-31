@@ -7,6 +7,7 @@ import java.util.concurrent.BlockingQueue;
 
 /**
  * This class is meant to be instantiated by JavaFX applications
+ * Author: Youssef Amin, Natalie Onion
  */
 public abstract class IOPortClient2 {
     public Socket CLIENT_SOCKET;

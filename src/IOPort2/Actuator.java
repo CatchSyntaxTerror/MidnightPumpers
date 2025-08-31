@@ -9,6 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Actuator only sends messages cant read or peek
+ * Author: Youssef Amin, Natalie Onion
  */
 public class Actuator extends IOPortServer2 implements Runnable {
     public Actuator(int port) {

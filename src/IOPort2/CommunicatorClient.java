@@ -9,6 +9,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * The client side of the Communicator. For JavaFX
+ * Author: Youssef Amin, Natalie Onion
+ */
 public class CommunicatorClient extends IOPortClient2 implements Runnable {
 
     public CommunicatorClient(int port) {

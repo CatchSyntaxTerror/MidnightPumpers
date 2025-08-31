@@ -6,6 +6,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Communicator class is an instance of both
+ * Author: Youssef Amin, Natalie Onion
  */
 public class CommunicatorServer extends IOPortServer2 implements Runnable {
 

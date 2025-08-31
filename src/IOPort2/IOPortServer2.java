@@ -9,6 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * This class is meant to be instantiated by main
+ * Author: Youssef Amin, Natalie Onion
  */
 public abstract class IOPortServer2 {
     protected ServerSocket SERVER_SOCKET;

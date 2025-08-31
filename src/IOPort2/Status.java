@@ -10,6 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Not totally sure if this is right
  * Status does not send messages only receives and executes
+ * Author: Youssef Amin, Natalie Onion
  */
 public class Status extends IOPortClient2 implements Runnable {
     public Status(int port) {
