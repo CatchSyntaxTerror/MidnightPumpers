@@ -2,6 +2,7 @@ package IOPort;
 
 import java.io.*;
 import java.net.ServerSocket;
+import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -12,6 +13,7 @@ public class CommunicatorServer extends IOPortServer implements Runnable {
 
     public CommunicatorServer(int port) {
         super(port);
+        SERVER_UUID = UUID.randomUUID();
         try {
             SERVER_SOCKET = new ServerSocket(port);
             CLIENT_SOCKET = SERVER_SOCKET.accept();

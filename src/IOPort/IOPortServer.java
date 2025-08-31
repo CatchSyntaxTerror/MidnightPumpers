@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -17,9 +18,10 @@ public abstract class IOPortServer {
     protected int PORT;
     protected String HOST;
     protected BlockingQueue<String> INBOX;
-    BufferedReader LISTENER;
-    PrintWriter WRITER;
-    boolean ON;
+    public BufferedReader LISTENER;
+    public PrintWriter WRITER;
+    public boolean ON;
+    public UUID SERVER_UUID;
 
     public IOPortServer(int port) {
         this.PORT = port;
