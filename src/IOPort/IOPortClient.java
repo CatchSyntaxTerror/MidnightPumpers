@@ -1,7 +1,6 @@
 package IOPort;
 
-import java.io.BufferedReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 
@@ -38,6 +37,26 @@ public abstract class IOPortClient {
     public abstract Object read();
 
     public abstract void receive();
+
+    protected void connect(int n) {
+        try {
+            CLIENT_SOCKET=new Socket(HOST, PORT);
+
+
+        }catch (Exception e){
+            try {
+                Thread.sleep(1000);
+                if(n<15){
+                    connect(n+1);
+                }
+
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        }
+
+    }
 }
 
 

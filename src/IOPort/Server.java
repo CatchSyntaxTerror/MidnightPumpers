@@ -2,7 +2,7 @@ package IOPort;
 
 import util.PortAddresses;
 
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Starts the servers
@@ -11,23 +11,45 @@ public class Server {
     private IOPortClient nozzle;
     private IOPortClient flowMeter;
     private IOPortServer pump;
-    private ArrayList<IOPortClient> ioPortClients;
-    private ArrayList<IOPortServer> ioPortServers;
-    public Server (){
-        this.ioPortServers = new ArrayList<>();
-        this.ioPortClients = new ArrayList<>();
+    private Map<UUID,IOPortServer> serverMap=new HashMap();
+    private Map<UUID,IOPortClient> clientMap=new HashMap();
+    public Server (Map<UUID,IOPortServer> serverMap,Map<UUID,IOPortClient> clientMap){
+       this.serverMap=serverMap;
+       this.clientMap=clientMap;
     }
 
-    public void addServer(IOPortServer ioPortServer){
-        this.ioPortServers.add(ioPortServer);
+
+    public void send(String message, UUID ID){
+        IOPortServer server=serverMap.get(ID);
+       if(server!=null){
+           server.send(message);
+       }else{
+           clientMap.get(ID).send(message);
+       }
+
     }
 
-    public void addClient(IOPortClient ioPortClient){
-        this.ioPortClients.add(ioPortClient);
+    public Object get(UUID ID){
+        IOPortServer server=serverMap.get(ID);
+        if(server!=null){
+            return server.get();
+        }else{
+            return clientMap.get(ID).get();
+        }
     }
+
+    public Object read(UUID ID){
+        IOPortServer server=serverMap.get(ID);
+        if(server!=null){
+            return server.read();
+        }else{
+            return clientMap.get(ID).read();
+        }
+    }
+
 
     public void startUp(){
-        for(IOPortServer server : this.ioPortServers){
+        for(IOPortServer server:serverMap.values()){
             if(server instanceof Actuator actuator){
                 Thread thread = new Thread(actuator);
                 thread.start();
@@ -36,7 +58,12 @@ public class Server {
                 thread.start();
             }
         }
-        for (IOPortClient client : this.ioPortClients){
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        for (IOPortClient client:clientMap.values()){
             if(client instanceof Status status){
                 Thread thread = new Thread(status);
                 thread.start();
@@ -47,8 +74,6 @@ public class Server {
         }
     }
     public void connect(){
-        for (IOPortServer server : this.ioPortServers){
 
-        }
     }
 }

@@ -1,9 +1,6 @@
 package IOPort;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -16,7 +13,7 @@ public class CommunicatorClient extends IOPortClient implements Runnable {
     public CommunicatorClient(int port) {
         super(port);
         try {
-            CLIENT_SOCKET = new Socket(HOST, port);
+            connect(0);
             LISTENER = new BufferedReader(new InputStreamReader(CLIENT_SOCKET.getInputStream()));
             WRITER = new PrintWriter(CLIENT_SOCKET.getOutputStream(), true);
             System.out.println("Server listening on port " + port);
@@ -94,4 +91,7 @@ public class CommunicatorClient extends IOPortClient implements Runnable {
             receive();
         }
     }
+
+
+
 }

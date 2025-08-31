@@ -17,7 +17,7 @@ public class Status extends IOPortClient implements Runnable {
     public Status(int port) {
         super(port);
         try {
-            CLIENT_SOCKET = new Socket(HOST, port);
+            connect(0);
             LISTENER = new BufferedReader(new InputStreamReader(CLIENT_SOCKET.getInputStream()));
             WRITER = new PrintWriter(CLIENT_SOCKET.getOutputStream(), true);
             System.out.println("Server listening on port " + port);
