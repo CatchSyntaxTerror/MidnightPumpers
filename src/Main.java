@@ -1,6 +1,6 @@
 import NewIOPort.IOPort;
 import NewIOPort.IOPortServer;
-import NewIOPort.PortAddresses;
+import util.PortAddresses;
 
 
 /**

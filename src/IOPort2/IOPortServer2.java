@@ -1,0 +1,44 @@
+package IOPort2;
+
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+/**
+ * This class is meant to be instantiated by main
+ */
+public abstract class IOPortServer2 {
+    protected ServerSocket SERVER_SOCKET;
+    public Socket CLIENT_SOCKET;
+    protected int PORT;
+    protected String HOST;
+    protected BlockingQueue<String> INBOX;
+    BufferedReader LISTENER;
+    PrintWriter WRITER;
+    boolean ON;
+
+    public IOPortServer2(int port) {
+        this.PORT = port;
+        this.HOST = "localhost";
+        BlockingQueue<String> queue = new LinkedBlockingQueue<>();
+    }
+
+    /**
+     * just to make sure all sockets are closed appropriately
+     */
+    public abstract void close();
+
+    /**
+     * these methods allow users to send receive and peak at messages
+     */
+    public abstract void send(String message);
+
+    public abstract String get();
+
+    public abstract String read();
+
+    public abstract void receive();
+}

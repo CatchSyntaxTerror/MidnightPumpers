@@ -2,7 +2,7 @@ package testing;
 
 import NewIOPort.IOPort;
 import NewIOPort.IOPortClient;
-import NewIOPort.PortAddresses;
+import util.PortAddresses;
 
 public class PumpTest {
     //This is just a test of the current socket wrapper,
