@@ -1,7 +1,7 @@
 import IOPort.Actuator;
 import IOPort.IOPortClient;
 import IOPort.IOPortServer;
-import IOPort.Status;
+import IOPort.*;
 import sim.Gas;
 import util.PortAddresses;
 
@@ -16,7 +16,10 @@ public class Main {
         IOPortClient flowMeter = new Status(PortAddresses.FLOW_METER_PORT);
         IOPortServer pump = new Actuator(PortAddresses.PUMP_PORT);
 
-        Server server = new Server(nozzle, flowMeter, pump);
+        Server server = new Server();
+        server.addServer(pump);
+        server.addClient(nozzle);
+        server.addClient(flowMeter);
         server.startUp();
         server.connect();
     }
