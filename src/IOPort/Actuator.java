@@ -55,7 +55,7 @@ public class Actuator extends IOPortServer implements Runnable {
      * doesnt matter, dont use it
      */
     @Override
-    public String get() {
+    public Object get() {
         System.out.println("You Shouldn't be using this");
         ON = false;
         throw new UnsupportedOperationException();
@@ -65,7 +65,7 @@ public class Actuator extends IOPortServer implements Runnable {
      *  doesnt matter, dont use it
      */
     @Override
-    public String read() {
+    public Object read() {
         System.out.println("You Shouldn't be using this");
         ON = false;
         throw new UnsupportedOperationException();
