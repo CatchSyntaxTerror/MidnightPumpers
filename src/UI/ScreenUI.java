@@ -128,18 +128,10 @@ public class ScreenUI extends Application {
      */
     private void createTextBoxes() {
         //TODO: text box creation
-        for (int i = 0; i < 10; i++) {
-            Label lbl;
-            int rowI = i / 2;
-
-            if(i % 2 == 0) {
-                // Even numbers are on the right of the display
-                lbl = createLbl(rowI, 1);
-
-            } else {
-                // Odd numbers on the left of the display
-                lbl = createLbl(rowI, 2);
-            }
+        for (int i = 0; i < 10; i += 2) {
+            int spanning[] = {i, i+1};
+            Label lbl = createLbl(spanning);
+            lbl.setText(spanning[0] + "" + spanning[1]);
         }
     }
 
@@ -147,9 +139,10 @@ public class ScreenUI extends Application {
      * Add this label to the grid
      * @param row the row of the grid to add the label
      * @param col the column of the grid to add the label
+     * @param span the number of columns this textbox spans
      * @return the created label
      */
-    private Label createLbl(int row, int col) {
+    private Label createLbl(int row, int col, int span) {
         Label lbl = new Label("lorem ipsum");
         HBox hBox = new HBox(0, lbl);
 
@@ -159,6 +152,60 @@ public class ScreenUI extends Application {
         hBox.setAlignment(Pos.CENTER);
 
         gridPane.add(hBox, col, row);
+        GridPane.setColumnSpan(hBox, span);
+        return lbl;
+    }
+
+    /**
+     * Create the label at this text field position associated with the grid
+     * @param txtFieldNums
+     * @return
+     */
+    private Label createLbl(int txtFieldNums[]) {
+        Label lbl = new Label();
+        int rowI = txtFieldNums[0] / 2;
+
+        switch (txtFieldNums.length) {
+            case 1:
+                // text only spans one field
+                if(txtFieldNums[0] % 2 == 0) {
+                    // Even numbers are on the left of the display
+                    lbl = createLbl(rowI, 1, 1);
+
+                } else {
+                    // Odd numbers on the right of the display
+                    lbl = createLbl(rowI, 2, 1);
+                }
+                break;
+            case 2:
+                // text spans two fields
+                if ((txtFieldNums[0] + 1) != txtFieldNums[1] ) {
+                    // Miss-input, throw error
+                    sendErrorMsg();
+                } else {
+                    // text spans two fields
+                    lbl = createLbl(rowI, 1, 2);
+                }
+                
+                break;
+            default:
+                // ERROR
+                sendErrorMsg();
+                break;
+        }
+
+        return lbl;
+    }
+    /**
+     *
+     * @param txtField
+     * @param fntSize
+     * @param fontType
+     * @param bckColor
+     * @return
+     */
+    private Label createLbl(int txtField[], int fntSize, int fontType, int bckColor) {
+        Label lbl = createLbl(txtField);
         return lbl;
     }
 
@@ -205,11 +252,11 @@ public class ScreenUI extends Application {
         int rowI = btnNum / 2;
 
         if(btnNum % 2 == 0) {
-            // Even numbers are on the right of the display
+            // Even numbers are on the left of the display
             btn = createBtn(rowI, 0);
 
         } else {
-            // Odd numbers on the left of the display
+            // Odd numbers on the right of the display
             btn = createBtn(rowI, 3);
         }
         return btn;
@@ -247,6 +294,14 @@ public class ScreenUI extends Application {
     private void notifyListener(int pressedBtn) {
         System.out.println(getScreenState(pressedBtn));
         //TODO: implement Communicator
+    }
+
+    /**
+     * Notify Main System that an error happened
+     */
+    private void sendErrorMsg() {
+        //TODO
+        System.out.println("ERROR");
     }
 
     /**
