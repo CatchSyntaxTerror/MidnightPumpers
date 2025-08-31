@@ -32,6 +32,7 @@ public class Status extends IOPortClient2 implements Runnable {
     public void close() {
         try {
             CLIENT_SOCKET.close();
+            System.out.println("Client socket closed");
             ON = false;
         } catch (IOException e) {
             System.out.println("Could not close client socket");

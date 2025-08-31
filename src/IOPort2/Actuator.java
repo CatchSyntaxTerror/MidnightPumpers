@@ -33,6 +33,7 @@ public class Actuator extends IOPortServer2 implements Runnable {
         try {
             CLIENT_SOCKET.close();
             SERVER_SOCKET.close();
+            System.out.println("Server closed");
             ON = false;
         } catch (IOException e) {
             System.out.println("Could not close client/server socket");
@@ -77,7 +78,7 @@ public class Actuator extends IOPortServer2 implements Runnable {
         try {
             INBOX.add(LISTENER.readLine());
         } catch (IOException e) {
-            System.out.println("Could not receive message.");
+            System.out.println("closing server");
             close();
         }
     }

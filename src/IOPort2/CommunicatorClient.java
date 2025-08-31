@@ -31,6 +31,7 @@ public class CommunicatorClient extends IOPortClient2 implements Runnable {
     public void close() {
         try {
             CLIENT_SOCKET.close();
+            System.out.println("Server closed");
             ON = false;
         } catch (IOException e) {
             System.out.println("Could not close client socket");
@@ -76,7 +77,7 @@ public class CommunicatorClient extends IOPortClient2 implements Runnable {
         try {
             INBOX.add(LISTENER.readLine());
         } catch (IOException e) {
-            System.out.println("Could not receive message.");
+            System.out.println("Closing server");
             close();
         }
     }

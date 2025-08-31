@@ -8,12 +8,12 @@ import util.PortAddresses;
  */
 public class CommunicatorTestClient {
     public static void main(String[] args) throws InterruptedException {
-        CommunicatorClient pumpClient = new CommunicatorClient(PortAddresses.TEST_COMMUNICATOR_PORT);
+        CommunicatorClient pumpClient = new CommunicatorClient(PortAddresses.PUMP_PORT);
         Thread pumpThread = new Thread(pumpClient);
         pumpThread.start();
         String message = pumpClient.get();
         if (message.equals("I like pizza")){
-            Thread.sleep(3000);
+            Thread.sleep(2000);
             pumpClient.send("No way me too!");
             System.out.println("No way me too!");
         }
