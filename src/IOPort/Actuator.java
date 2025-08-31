@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
+import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -14,6 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Actuator extends IOPortServer implements Runnable {
     public Actuator(int port) {
         super(port);
+        SERVER_UUID = UUID.randomUUID();
         try {
             SERVER_SOCKET = new ServerSocket(port);
             CLIENT_SOCKET = SERVER_SOCKET.accept();

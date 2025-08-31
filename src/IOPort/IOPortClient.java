@@ -2,6 +2,7 @@ package IOPort;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -13,9 +14,10 @@ public abstract class IOPortClient {
     protected int PORT;
     protected String HOST;
     protected BlockingQueue<String> INBOX;
-    BufferedReader LISTENER;
-    PrintWriter WRITER;
+    public BufferedReader LISTENER;
+    public PrintWriter WRITER;
     boolean ON;
+    public UUID CLIENT_UUID;
 
     public IOPortClient(int port) {
         this.PORT = port;

@@ -5,22 +5,54 @@ import IOPort.*;
 import sim.Gas;
 import util.PortAddresses;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 /**
  * Authors: Youssef, Valerie, Joel, Natalie, Danny
  * This is the main class
  */
 
 public class Main {
-    public static void main(String[] args) {
-        IOPortClient nozzle = new Status(PortAddresses.HOSE_PORT);
-        IOPortClient flowMeter = new Status(PortAddresses.FLOW_METER_PORT);
-        IOPortServer pump = new Actuator(PortAddresses.PUMP_PORT);
+    private static IOPortServer PUMP;
+    private static IOPortServer SCREEN;
+    private static IOPortServer CARD_COMPANY;
+    private static IOPortServer GAS_STATION;
+    private static IOPortClient CC_READER;
+    private static IOPortClient NOZZLE;
+    private static IOPortClient FLOWMETER;
+    private static Map<UUID, IOPortServer> ioPortServers;
+    private static Map<UUID, IOPortClient> ioPortClients;
+    private static Server SERVER;
 
-        Server server = new Server();
-        server.addServer(pump);
-        server.addClient(nozzle);
-        server.addClient(flowMeter);
-        server.startUp();
-        server.connect();
+    private static Map<UUID, IOPortServer> initializeServers(){
+        PUMP = new Actuator(PortAddresses.PUMP_PORT);
+        SCREEN = new CommunicatorServer(PortAddresses.SCREEN_PORT);
+        CARD_COMPANY = new CommunicatorServer(PortAddresses.CARD_COMPANY_PORT);
+        GAS_STATION = new CommunicatorServer(PortAddresses.GAS_STATION_PORT);
+        Map<UUID,IOPortServer> ioPortServers = new HashMap<>();
+        ioPortServers.put(PUMP.SERVER_UUID, PUMP);
+        ioPortServers.put(SCREEN.SERVER_UUID, SCREEN);
+        ioPortServers.put(CARD_COMPANY.SERVER_UUID, CARD_COMPANY);
+        ioPortServers.put(GAS_STATION.SERVER_UUID, GAS_STATION);
+        return ioPortServers;
+    }
+
+    private static Map<UUID,IOPortClient> initializeClients(){
+        CC_READER = new Status(PortAddresses.CARD_READER_PORT);
+        NOZZLE = new Status(PortAddresses.HOSE_PORT);
+        FLOWMETER = new Status(PortAddresses.FLOW_METER_PORT);
+        Map<UUID,IOPortClient> ioPortClients = new HashMap<>();
+        ioPortClients.put(CC_READER.CLIENT_UUID, CC_READER);
+        ioPortClients.put(NOZZLE.CLIENT_UUID, NOZZLE);
+        ioPortClients.put(FLOWMETER.CLIENT_UUID, FLOWMETER);
+        return ioPortClients;
+    }
+
+    public static void main(String[] args) {
+        ioPortServers = initializeServers();
+        ioPortClients = initializeClients();
+        SERVER = new Server(ioPortServers, ioPortClients);
     }
 }
