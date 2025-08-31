@@ -130,8 +130,7 @@ public class ScreenUI extends Application {
         //TODO: text box creation
         for (int i = 0; i < 10; i += 2) {
             int spanning[] = {i, i+1};
-            Label lbl = createLbl(spanning);
-            lbl.setText(spanning[0] + "" + spanning[1]);
+            Label lbl = createLbl(spanning, 0, 0, 0, spanning[0] + "" + spanning[1]);
         }
     }
 
@@ -157,9 +156,9 @@ public class ScreenUI extends Application {
     }
 
     /**
-     * Create the label at this text field position associated with the grid
-     * @param txtFieldNums
-     * @return
+     * Create the label at these text field positions associated with the grid
+     * @param txtFieldNums the text field positions
+     * @return the label created at that position
      */
     private Label createLbl(int txtFieldNums[]) {
         Label lbl = new Label();
@@ -189,23 +188,28 @@ public class ScreenUI extends Application {
                 
                 break;
             default:
-                // ERROR
+                // ERROR, unexpected number of field numbers
                 sendErrorMsg();
                 break;
         }
 
         return lbl;
     }
+
     /**
-     *
-     * @param txtField
-     * @param fntSize
-     * @param fontType
-     * @param bckColor
-     * @return
+     Create a label with all of this dynamicism
+     * @param txtFields the field(s) this text spans
+     * @param fontSize font size
+     * @param fontType font type
+     * @param backColor background color
+     * @param str the string of text to display
+     * @return the created label
      */
-    private Label createLbl(int txtField[], int fntSize, int fontType, int bckColor) {
-        Label lbl = createLbl(txtField);
+    private Label createLbl(int txtFields[], int fontSize, int fontType,
+                            int backColor, String str) {
+        //TODO make this an object rather than a bunch of primitive types
+        Label lbl = createLbl(txtFields);
+        lbl.setText(str);
         return lbl;
     }
 
