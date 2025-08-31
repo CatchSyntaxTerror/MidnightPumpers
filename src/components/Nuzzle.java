@@ -3,6 +3,8 @@ package components;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import IOPort.*;
+import util.*;
 
 public class Nuzzle {
     private Line line;
@@ -10,8 +12,10 @@ public class Nuzzle {
     private Circle cirEnd;
     private boolean conCar;
     private boolean conPump;
+    private Actuator actuator;
 
     public Nuzzle() {
+        this.actuator = new Actuator(44444);
         this.line = null;
         this.cirHead = null;
         this.cirEnd = null;

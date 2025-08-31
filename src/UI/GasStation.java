@@ -52,6 +52,7 @@ public class GasStation extends Application {
 
         Rectangle screen = new Rectangle(515,400,100, 50);
         screen.setFill(Color.WHITE);
+        screen.setOnMouseClicked(event -> textFlow(this.flowmeter));
         Text flowNum = new Text(525,430,"0000");
         flowNum.setFont(Font.font(35));
 
@@ -115,6 +116,12 @@ public class GasStation extends Application {
         anchorPane.getChildren().add(pumpSlot);
         anchorPane.getChildren().add(cirEnd);
         anchorPane.getChildren().add(cirHead);
+    }
+
+    private void textFlow(Flowmeter flowmeter) {
+        for(int i = 0; i< 20;i++){
+            flowmeter.checkingFlow();
+        }
     }
 
     private void hosetoPump(Nuzzle nuzzle,double x, double y){
