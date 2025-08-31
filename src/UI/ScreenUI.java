@@ -1,5 +1,6 @@
 package UI;
 
+import components.Screen;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -17,7 +18,6 @@ import javafx.stage.Stage;
  */
 public class ScreenUI extends Application {
     // Constants:
-    private final int NULL_BTN    =  -1; // signifies no button selected
     private final double HORZ     =   1; // the horizontal gap of the grid
     private final double VERT     =   1; // the vertical gap of the grid
     private final double DISP_W   = 300; // the GUI's initial width
@@ -33,7 +33,9 @@ public class ScreenUI extends Application {
     // Non-Constant Global Variables:
     private GridPane          gridPane; // the meat of the display
     private ToggleGroup    toggleGroup; // For mutually exclusive buttons
-    private int selectedBtn = NULL_BTN; // the fuel grade selection
+
+    // The Screen Object
+    private final Screen screen; // The screen that this GUI is displaying
 
     /**
      * launches JavaFX application
@@ -42,11 +44,18 @@ public class ScreenUI extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
     /**
      * The screen constructor
      */
     public ScreenUI() {
+        this.screen = new Screen();
+        resetGrid();
+    }
+    /**
+     * The screen constructor
+     */
+    public ScreenUI(Screen scr) {
+        this.screen = scr;
         resetGrid();
     }
     /**
@@ -55,7 +64,6 @@ public class ScreenUI extends Application {
     private void resetGrid() {
         //TODO: redraw display after a call to resetGrid()
         gridPane = new GridPane(HORZ, VERT);
-        selectedBtn = NULL_BTN;
         setGridConstraints();
         setUpToggleGroup();
 
@@ -128,18 +136,9 @@ public class ScreenUI extends Application {
      */
     private void createTextBoxes() {
         //TODO: text box creation
-        for (int i = 0; i < 10; i++) {
-            Label lbl;
-            int rowI = i / 2;
-
-            if(i % 2 == 0) {
-                // Even numbers are on the right of the display
-                lbl = createLbl(rowI, 1);
-
-            } else {
-                // Odd numbers on the left of the display
-                lbl = createLbl(rowI, 2);
-            }
+        for (int i = 0; i < 10; i += 2) {
+            int[] spanning = {i, i+1};
+            Label lbl = createLbl(spanning, 0, 0, 0, spanning[0] + "" + spanning[1]);
         }
     }
 
@@ -147,9 +146,10 @@ public class ScreenUI extends Application {
      * Add this label to the grid
      * @param row the row of the grid to add the label
      * @param col the column of the grid to add the label
+     * @param span the number of columns this textbox spans
      * @return the created label
      */
-    private Label createLbl(int row, int col) {
+    private Label createLbl(int row, int col, int span) {
         Label lbl = new Label("lorem ipsum");
         HBox hBox = new HBox(0, lbl);
 
@@ -159,6 +159,63 @@ public class ScreenUI extends Application {
         hBox.setAlignment(Pos.CENTER);
 
         gridPane.add(hBox, col, row);
+        GridPane.setColumnSpan(hBox, span);
+        return lbl;
+    }
+
+    /**
+     * Create the label at these text field positions associated with the grid
+     * @param txtFieldNums the text field positions
+     * @return the label created at that position
+     */
+    private Label createLbl(int[] txtFieldNums) {
+        Label lbl = new Label();
+        int rowI = txtFieldNums[0] / 2;
+
+        switch (txtFieldNums.length) {
+            case 1 -> {
+                // text only spans one field
+                if (txtFieldNums[0] % 2 == 0) {
+                    // Even numbers are on the left of the display
+                    lbl = createLbl(rowI, 1, 1);
+
+                } else {
+                    // Odd numbers on the right of the display
+                    lbl = createLbl(rowI, 2, 1);
+                }
+            }
+            case 2 -> {
+                // text spans two fields
+                if ((txtFieldNums[0] + 1) != txtFieldNums[1]) {
+                    // Miss-input, throw error
+                    sendErrorMsg();
+                } else {
+                    // text spans two fields
+                    lbl = createLbl(rowI, 1, 2);
+                }
+            }
+            default ->
+                // ERROR, unexpected number of field numbers
+                    sendErrorMsg();
+        }
+
+        return lbl;
+    }
+
+    /**
+     Create a label with all of this dynamicism
+     * @param txtFields the field(s) this text spans
+     * @param fontSize font size
+     * @param fontType font type
+     * @param backColor background color
+     * @param str the string of text to display
+     * @return the created label
+     */
+    private Label createLbl(int[] txtFields, int fontSize, int fontType,
+                            int backColor, String str) {
+        //TODO make this an object rather than a bunch of primitive types
+        Label lbl = createLbl(txtFields);
+        lbl.setText(str);
         return lbl;
     }
 
@@ -205,11 +262,11 @@ public class ScreenUI extends Application {
         int rowI = btnNum / 2;
 
         if(btnNum % 2 == 0) {
-            // Even numbers are on the right of the display
+            // Even numbers are on the left of the display
             btn = createBtn(rowI, 0);
 
         } else {
-            // Odd numbers on the left of the display
+            // Odd numbers on the right of the display
             btn = createBtn(rowI, 3);
         }
         return btn;
@@ -225,7 +282,7 @@ public class ScreenUI extends Application {
             // Responsive Button
             btn.setOnMouseClicked(event -> {
                 // Notify the Communicator and reset the grid
-                notifyListener(btnNumber);
+                notifyScreen(btnNumber, true);
                 resetGrid();
             });
         } else {
@@ -234,41 +291,32 @@ public class ScreenUI extends Application {
 
             btn.setOnMouseClicked(event -> {
                 // Track the number associated with this button
-                selectedBtn = btnNumber;
+                notifyScreen(btnNumber, false);
             });
         }
     }
 
-
     /**
-     * Notify the Main System of the screen button state, via the Communicator
-     * IO Port
+     Notify the screen that a button was pressed
+     * @param btnNumber the button that was pressed
+     * @param exclusiveSelect was the button a exlusive select button?
      */
-    private void notifyListener(int pressedBtn) {
-        System.out.println(getScreenState(pressedBtn));
-        //TODO: implement Communicator
+    private void notifyScreen(int btnNumber, boolean exclusiveSelect) {
+        screen.notify(btnNumber, exclusiveSelect);
     }
 
+
+
+
     /**
-     * for communicating with the Main System
-     * @param pressedBtn the responsive button responsible for the notify call
-     * @return the screens current state
+     * Notify Main System that an error happened
      */
-    private String getScreenState(int pressedBtn) {
-        //TODO: make more modular? State object rather than String?
-        //TODO: make sure everyone is on the same page about button messaging
-        // info
-        if (selectedBtn == NULL_BTN) {
-            // No button selected, only notify of the responsive button press
-            return pressedBtn + ";";
-        } else {
-            /* Return fuel grade selection and responsive button, and reset 
-            button selection */
-            int val = selectedBtn;
-            selectedBtn = NULL_BTN;
-            return pressedBtn + ":" + val + ";";
-        }
+    private void sendErrorMsg() {
+        //TODO - implement Communicator IO Port
+        System.out.println("ERROR");
     }
+
+
 
     /**
      * Get the scene of this ScreenUI object
@@ -295,7 +343,7 @@ public class ScreenUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Touch Screen Display");
-        ScreenUI scr = new ScreenUI();
+        ScreenUI scr = new ScreenUI(new Screen());
         primaryStage.setScene(new Scene(scr.getScene(), DISP_W, DISP_H));
         primaryStage.show();
     }
