@@ -13,7 +13,7 @@ public class CommunicatorTestServer {
         pumpThread.start();
         pump.send("I like pizza");
         System.out.println("I like pizza");
-        String message = pump.get();
+        String message = pump.get().toString();
         if (message.equals("No way me too!")){
             Thread.sleep(2000);
             System.out.println("Sweet");

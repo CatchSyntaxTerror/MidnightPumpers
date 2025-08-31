@@ -11,7 +11,7 @@ public class CommunicatorTestClient {
         CommunicatorClient pumpClient = new CommunicatorClient(PortAddresses.PUMP_PORT);
         Thread pumpThread = new Thread(pumpClient);
         pumpThread.start();
-        String message = pumpClient.get();
+        String message = pumpClient.get().toString();
         if (message.equals("I like pizza")){
             Thread.sleep(2000);
             pumpClient.send("No way me too!");
