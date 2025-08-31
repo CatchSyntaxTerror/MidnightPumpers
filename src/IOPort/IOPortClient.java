@@ -40,6 +40,11 @@ public abstract class IOPortClient {
 
     public abstract void receive();
 
+    /**
+     * This method handles server timing problems.
+     * Clients will try to connect over and over for 15 seconds
+     * @param n The starting value. n = 0 -> 15 seconds
+     */
     protected void connect(int n) {
         try {
             CLIENT_SOCKET = new Socket(HOST, PORT);

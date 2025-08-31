@@ -5,7 +5,9 @@ import util.PortAddresses;
 import java.util.*;
 
 /**
- * Starts the servers
+ * This class is a wrapper for Threads. It starts the server threads
+ * Allows other classes to call send(), get(), read() on server/client IOPorts
+ * Author: Danny Phantom, Natalie Onion, Youssef Amin
  */
 public class Server {
     private IOPortClient nozzle;
@@ -19,7 +21,11 @@ public class Server {
         this.clientMap = clientMap;
     }
 
-
+    /**
+     * Allows server to send messages through IOPort
+     * @param message The message to be sent
+     * @param ID UUID of Server that sends the message
+     */
     public void send(String message, UUID ID) {
         IOPortServer server = serverMap.get(ID);
         if (server != null) {
@@ -30,6 +36,12 @@ public class Server {
 
     }
 
+    /**
+     * Obtains value from server/client BlockingQueue
+     * Does remove from BlockingQueue
+     * @param ID UUID of server/client
+     * @return Message
+     */
     public Object get(UUID ID) {
         IOPortServer server = serverMap.get(ID);
         if (server != null) {
@@ -39,6 +51,12 @@ public class Server {
         }
     }
 
+    /**
+     * Allows for a peek at a servers BlockingQueue
+     * Does not remove from IOPort BlockingQueue
+     * @param ID UUID of a server/client
+     * @return Message
+     */
     public Object read(UUID ID) {
         IOPortServer server = serverMap.get(ID);
         if (server != null) {
@@ -48,7 +66,9 @@ public class Server {
         }
     }
 
-
+    /**
+     * Starts each server/client thread
+     */
     public void startUp() {
         for (IOPortServer server : serverMap.values()) {
             if (server instanceof Actuator actuator) {
@@ -68,9 +88,5 @@ public class Server {
                 thread.start();
             }
         }
-    }
-
-    public void connect() {
-
     }
 }
