@@ -55,7 +55,7 @@ public class CommunicatorClient extends IOPortClient implements Runnable {
      * get messages and place in blocking queue
      */
     @Override
-    public String get() {
+    public Object get() {
         try {
             return INBOX.take();
         } catch (InterruptedException e) {
@@ -67,7 +67,7 @@ public class CommunicatorClient extends IOPortClient implements Runnable {
      * peak at blocking queue
      */
     @Override
-    public String read() {
+    public Object read() {
         return INBOX.peek();
     }
 

@@ -1,4 +1,4 @@
-package stationGUI;
+package UI;
 
 import components.Flowmeter;
 import components.Nuzzle;

@@ -104,8 +104,8 @@ public class IOPortClientLegacy extends IOPort{
                 throw new RuntimeException(e);
             }
         }
-
     }
+
     public static class Communicator extends IOPortClientLegacy {
         /**
          * Creates an IO port instance, should be called with the child class

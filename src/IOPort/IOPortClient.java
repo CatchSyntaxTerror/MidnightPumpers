@@ -33,9 +33,9 @@ public abstract class IOPortClient {
      */
     public abstract void send(String message);
 
-    public abstract String get();
+    public abstract Object get();
 
-    public abstract String read();
+    public abstract Object read();
 
     public abstract void receive();
 }
