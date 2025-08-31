@@ -15,12 +15,14 @@ public class Nuzzle {
     private Actuator actuator;
 
     public Nuzzle() {
-        this.actuator = new Actuator(44444);
+        this.actuator = new Actuator(PortAddresses.HOSE_PORT);
         this.line = null;
         this.cirHead = null;
         this.cirEnd = null;
         this.conPump = true;
         this.conCar = false;
+        Thread pumpThread = new Thread(actuator);
+        pumpThread.start();
     }
 
     public void setNotCon(){
