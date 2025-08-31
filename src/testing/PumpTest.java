@@ -1,7 +1,7 @@
 package testing;
 
-import NewIOPort.IOPort;
-import NewIOPort.IOPortClient;
+import legacy.IOPort;
+import legacy.IOPortClient;
 import util.PortAddresses;
 
 public class PumpTest {

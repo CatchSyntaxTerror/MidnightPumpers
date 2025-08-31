@@ -1,5 +1,5 @@
-import NewIOPort.IOPort;
-import NewIOPort.IOPortServer;
+import legacy.IOPort;
+import legacy.IOPortServer;
 import util.PortAddresses;
 
 

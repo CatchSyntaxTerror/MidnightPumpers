@@ -1,8 +1,7 @@
-package NewIOPort;
+package legacy;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.util.concurrent.BlockingQueue;
 
 /**
  * This class will be extended by IOPortClient and IOPortServer
