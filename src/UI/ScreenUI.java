@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
@@ -18,8 +19,8 @@ import javafx.stage.Stage;
  */
 public class ScreenUI extends Application {
     // Constants:
-    private final double HORZ     =   1; // the horizontal gap of the grid
-    private final double VERT     =   1; // the vertical gap of the grid
+    private final double HORZ     =   0; // the horizontal gap of the grid
+    private final double VERT     =   0; // the vertical gap of the grid
     private final double DISP_W   = 300; // the GUI's initial width
     private final double DISP_H   = 250; // the GUI's initial height
     private final int  NUM_COLS   =   4; // number of columns on the grid
@@ -27,15 +28,35 @@ public class ScreenUI extends Application {
     private final int  BTN_FACTOR =   8; /* buttons take up an eighth of the
                                              horizontal space */
     // CSS Style Strings
-    private final String SELECTED_CLR   = "-fx-background-color: lightblue;";
-    private final String UNSELECTED_CLR = "-fx-background-color: lightgray;";
+    private final String BLACK_SCRN   =
+            "-fx-background-color: #000000;";
+    private final String WHITE_BACKGROUND =
+            "-fx-background-color: #FFFFFF;";
+    private final String SELECTED_BTN   =
+            "-fx-background-color: #F3DD00, #F3DD00;";
+    private final String UNSELECTED_BTN =
+            "-fx-background-color: #F3DD00, #000000; -fx-background-insets: 0px, 3px;";
+    private final String RESPONSIVE_BTN =
+            "-fx-background-color: #000961, #E5E8FF; -fx-background-insets: 0px, 4px;";
+    private final String ITALIC = "-fx-font-style: italic;";
+    private final String BOLD   = "-fx-font-weight: bold;";
 
-    // Non-Constant Global Variables:
-    private GridPane          gridPane; // the meat of the display
-    private ToggleGroup    toggleGroup; // For mutually exclusive buttons
+    // Fonts
+    private final Font SMALL_FNT = new Font(12);
+    private final Font MED_FNT   = new Font(15);
+    private final Font LRG_FNT   = new Font(20);
 
-    // The Screen Object
-    private final Screen screen; // The screen that this GUI is displaying
+    // The Screen Object that this GUI is displaying
+    private final Screen screen;
+
+    // The Toggle Group
+    private final ToggleGroup TOGGLE_GROUP; // For mutually exclusive buttons
+
+    // The grid pane
+    private final GridPane GRID_PANE;
+
+
+
 
     /**
      * launches JavaFX application
@@ -48,44 +69,58 @@ public class ScreenUI extends Application {
      * The screen constructor
      */
     public ScreenUI() {
+        GRID_PANE = new GridPane(HORZ, VERT);
         this.screen = new Screen();
+        TOGGLE_GROUP = new ToggleGroup();
         resetGrid();
     }
+
     /**
      * The screen constructor
+     * @param scr the screen to picture
      */
     public ScreenUI(Screen scr) {
+        GRID_PANE = new GridPane(HORZ, VERT);
         this.screen = scr;
+        this.screen.setScreenUI(this);
+        TOGGLE_GROUP = new ToggleGroup();
         resetGrid();
+    }
+    private void clearGP() {
+        GRID_PANE.getChildren().clear(); // clear the grid pane
     }
     /**
      * Set up the grid
      */
     private void resetGrid() {
-        //TODO: redraw display after a call to resetGrid()
-        gridPane = new GridPane(HORZ, VERT);
+        clearGP();
+
         setGridConstraints();
         setUpToggleGroup();
 
-        //TODO: delete these methods, they are for testing purposes
-        createButtons();
-        createTextBoxes();
+        setBlank();
+    }
+    /**
+     * Make the display blank
+     */
+    public void setBlank() {
+        clearGP();
+        GRID_PANE.setStyle(BLACK_SCRN);
     }
 
     /**
      * Establishes multi-select behavior
      */
     private void setUpToggleGroup() {
-        toggleGroup = new ToggleGroup();
-        toggleGroup.selectedToggleProperty().addListener(
+        TOGGLE_GROUP.selectedToggleProperty().addListener(
                 (observable, oldToggle, newToggle) -> {
             if (newToggle != null) {
                 // Set selected button color
-                ((ToggleButton) newToggle).setStyle(SELECTED_CLR);
+                ((ToggleButton) newToggle).setStyle(SELECTED_BTN);
             }
             if (oldToggle != null) {
                 // Set unselected button color
-                ((ToggleButton) oldToggle).setStyle(UNSELECTED_CLR);
+                ((ToggleButton) oldToggle).setStyle(UNSELECTED_BTN);
             }
         });
     }
@@ -110,7 +145,7 @@ public class ScreenUI extends Application {
             /* For each column, set the column constraints to a percent of the
                screen width */
             col = new ColumnConstraints();
-            gridPane.getColumnConstraints().add(col);
+            GRID_PANE.getColumnConstraints().add(col);
             if(i != 0 && i != (NUM_COLS - 1)) {
                 // Text columns have less width
                 col.setPercentWidth(txtPercent);
@@ -124,7 +159,7 @@ public class ScreenUI extends Application {
             /* For each row, set the row constraints to a percent of the screen
                height*/
             row = new RowConstraints();
-            gridPane.getRowConstraints().add(row);
+            GRID_PANE.getRowConstraints().add(row);
             row.setPercentHeight(rowPercent);
         }
 
@@ -138,7 +173,7 @@ public class ScreenUI extends Application {
         //TODO: text box creation
         for (int i = 0; i < 10; i += 2) {
             int[] spanning = {i, i+1};
-            Label lbl = createLbl(spanning, 0, 0, 0, spanning[0] + "" + spanning[1]);
+            createLbl(spanning, 0, 0, 0, spanning[0] + "" + spanning[1]);
         }
     }
 
@@ -158,7 +193,7 @@ public class ScreenUI extends Application {
         HBox.setHgrow(lbl, Priority.ALWAYS);
         hBox.setAlignment(Pos.CENTER);
 
-        gridPane.add(hBox, col, row);
+        GRID_PANE.add(hBox, col, row);
         GridPane.setColumnSpan(hBox, span);
         return lbl;
     }
@@ -188,22 +223,26 @@ public class ScreenUI extends Application {
                 // text spans two fields
                 if ((txtFieldNums[0] + 1) != txtFieldNums[1]) {
                     // Miss-input, throw error
+                    System.out.println("ERROR: text must span two adjacent fields");
                     sendErrorMsg();
                 } else {
                     // text spans two fields
                     lbl = createLbl(rowI, 1, 2);
                 }
             }
-            default ->
+            default -> {
                 // ERROR, unexpected number of field numbers
-                    sendErrorMsg();
+                System.out.println("ERROR: unexpected number of field numbers");
+                sendErrorMsg();
+            }
+
         }
 
         return lbl;
     }
 
     /**
-     Create a label with all of this dynamicism
+     Create a label with all of this dynamics
      * @param txtFields the field(s) this text spans
      * @param fontSize font size
      * @param fontType font type
@@ -211,12 +250,51 @@ public class ScreenUI extends Application {
      * @param str the string of text to display
      * @return the created label
      */
-    private Label createLbl(int[] txtFields, int fontSize, int fontType,
+    public void createLbl(int[] txtFields, int fontSize, int fontType,
                             int backColor, String str) {
         //TODO make this an object rather than a bunch of primitive types
+        for (int i:
+             txtFields) {
+            System.out.println(i);
+        }
         Label lbl = createLbl(txtFields);
         lbl.setText(str);
-        return lbl;
+        switch (fontSize) {
+            case 0:
+                // Small
+                lbl.setFont(SMALL_FNT);
+                break;
+            case 2:
+                // Large
+                lbl.setFont(LRG_FNT);
+                break;
+            default:
+                // Medium
+                lbl.setFont(MED_FNT);
+        }
+        switch (fontType) {
+            case 0:
+                // Italic
+                lbl.setStyle(ITALIC);
+                break;
+            case 2:
+                // Bold
+                lbl.setStyle(BOLD);
+                break;
+            default:
+                // Regular font
+        }
+        switch (backColor) {
+            case 1:
+                // Grey
+                lbl.setStyle(WHITE_BACKGROUND);
+            case 2:
+                // Light Blue
+                lbl.setStyle(WHITE_BACKGROUND);
+            default:
+                // White
+                lbl.setStyle(WHITE_BACKGROUND);
+        }
     }
 
     /**
@@ -246,9 +324,9 @@ public class ScreenUI extends Application {
         hBox.setAlignment(Pos.CENTER);
 
         //Coloring
-        btn.setStyle(UNSELECTED_CLR);
+        btn.setStyle(UNSELECTED_BTN);
 
-        gridPane.add(hBox, col, row);
+        GRID_PANE.add(hBox, col, row);
         return btn;
     }
 
@@ -276,18 +354,19 @@ public class ScreenUI extends Application {
      * @param btnNumber the button location id
      * @param btnType the type of this button
      */
-    private void createBtn(int btnNumber, ButtonType btnType) {
+    public void createBtn(int btnNumber, ButtonType btnType) {
         ToggleButton btn = createBtn(btnNumber);
         if (btnType == ButtonType.RESPONSIVE) {
             // Responsive Button
+            // style
+            btn.setStyle(RESPONSIVE_BTN);
             btn.setOnMouseClicked(event -> {
-                // Notify the Communicator and reset the grid
+                // Notify the Communicator
                 notifyScreen(btnNumber, true);
-                resetGrid();
             });
         } else {
             // Multi-Select Button, add it to the toggle group
-            btn.setToggleGroup(toggleGroup);
+            btn.setToggleGroup(TOGGLE_GROUP);
 
             btn.setOnMouseClicked(event -> {
                 // Track the number associated with this button
@@ -299,21 +378,17 @@ public class ScreenUI extends Application {
     /**
      Notify the screen that a button was pressed
      * @param btnNumber the button that was pressed
-     * @param exclusiveSelect was the button a exlusive select button?
+     * @param exclusiveSelect was the button an exclusive select button?
      */
     private void notifyScreen(int btnNumber, boolean exclusiveSelect) {
         screen.notify(btnNumber, exclusiveSelect);
     }
 
-
-
-
     /**
      * Notify Main System that an error happened
      */
     private void sendErrorMsg() {
-        //TODO - implement Communicator IO Port
-        System.out.println("ERROR");
+        notifyScreen(-1, false);
     }
 
 
@@ -323,7 +398,7 @@ public class ScreenUI extends Application {
      * @return the grid pane (for display purposes)
      */
     private Parent getScene() {
-        return gridPane;
+        return GRID_PANE;
     }
     /**
      * The main entry point for all JavaFX applications.
@@ -342,10 +417,14 @@ public class ScreenUI extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Screen scr = new Screen();
+        ScreenUI screenUI = new ScreenUI(scr);
+
         primaryStage.setTitle("Touch Screen Display");
-        ScreenUI scr = new ScreenUI(new Screen());
-        primaryStage.setScene(new Scene(scr.getScene(), DISP_W, DISP_H));
+        primaryStage.setScene(new Scene(screenUI.getScene(), DISP_W, DISP_H));
         primaryStage.show();
+
+        scr.setScreen("t4-s0-f0-c0-text label one:t5-my next text box:t01-this field:b4m:b5m:b9x");
     }
 }
 
