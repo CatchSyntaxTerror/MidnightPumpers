@@ -1,5 +1,6 @@
 package components;
 
+import UI.ButtonType;
 import UI.ScreenUI;
 
 /**
@@ -16,16 +17,20 @@ import UI.ScreenUI;
 // - Store button presses
 public class Screen {
     // Constants
-    private final String REGEX = "[:]"; // split messages by the ':' character
-    // Button Tracking
+    private final String REGEX_0 = ":"; // split messages by the ':' character
+    private final String REGEX_1 = "-"; // split messages by the '-' character
     private final int NULL_BTN    =  -1; // signifies no button selected
+    private final int UNSET = -1; // signifies a text option is unset
+
+    // Button Tracking
     private int selectedBtn = NULL_BTN; // the fuel grade selection
 
+    // The gui
     private ScreenUI screenUI = null;
 
     /**
      * A screen UI setter
-     * @param scrUI
+     * @param scrUI the screen UI
      */
     public void setScreenUI(ScreenUI scrUI) {
         this.screenUI = scrUI;
@@ -38,15 +43,15 @@ public class Screen {
     public void setScreen(String screenStr) {
         //"t3-s2-f1-c0-text:b4m:b5m:b10x"
         // split the strings by semicolons
-        String[] instructions = screenStr.split(REGEX);
+        String[] instructions = screenStr.split(REGEX_0);
 
         if (screenUI == null) {
             // Error, cannot set display of a null screen
+            System.out.println("ERROR: Cannot set display of null screen");
             errorOccurred();
         } else if (screenStr.length() == 0) {
             // Blank Screen
             screenUI.setBlank();
-            System.out.println("Set the screen to be blank");
         } else {
             for (String inst : instructions) {
                 updateScreenUI(inst);
@@ -63,27 +68,149 @@ public class Screen {
         char fst = mlString.charAt(0);
         if (fst == 't') {
             // text box instruction
+            createTxt(mlString.substring(1));
         } else if (fst == 'b') {
             // button instruction
-            int lastIndex = mlString.length() - 1;
-            char buttonType = mlString.charAt(lastIndex); // last char
-            String numS = mlString.substring(1, lastIndex); // the number String
-
-            // TODO GUI button creation
-            try {
-                int fieldNum = Integer.parseInt(numS);
-                System.out.println("Converted integer: " + fieldNum);
-            } catch (NumberFormatException e) {
-                errorOccurred();
-                e.printStackTrace();
-            }
-
-
+            createBtn(mlString.substring(1));
         } else {
             // Only expecting text and button instructions
+            System.out.println("ERROR: only expecting text and button " +
+                    "instructions");
             errorOccurred();
         }
 
+    }
+
+    /**
+     * Create a text box on the screen based on field number, font size, font
+     * type, background color, and text string
+     * @param mlString
+     */
+    private void createTxt(String mlString) {
+        int size = -1;
+        int font = -1;
+        int color = -1;
+        String text;
+        int[] tempFields = {-1, -1};
+        int[] fieldNums;
+
+        //"3-s2-f1-c0-text"
+        String[] txtStrings = mlString.split(REGEX_1);
+
+        // The text
+        text = txtStrings[txtStrings.length - 1];
+
+        // Set the field number(s)
+        char numChar = txtStrings[0].charAt(0);
+        boolean error = setFieldNum(tempFields, 0, numChar);
+        if (error) {
+            return;
+        }
+        if (txtStrings[0].length() > 1) {
+            // Two text fields
+            numChar = txtStrings[0].charAt(1);
+            error = setFieldNum(tempFields, 1, numChar);
+            if (error) {
+                return;
+            }
+        }
+        if (tempFields[1] == NULL_BTN) {
+            // singular field number
+            fieldNums = new int[]{tempFields[0]};
+        } else {
+            // two field numbers
+            fieldNums = tempFields;
+        }
+
+        // Set text arguments
+        for (int i = 1; i < txtStrings.length - 1; i++) {
+            char indicator = txtStrings[i].charAt(0);
+            numChar = txtStrings[i].charAt(1);
+            switch (indicator) {
+                case 's' :
+                    // Size
+                    size = Character.getNumericValue(numChar);
+                    break;
+                case 'f':
+                    font = Character.getNumericValue(numChar);
+                    // Font
+                    break;
+                case 'c':
+                    // Background Color
+                    color = Character.getNumericValue(numChar);
+                    break;
+                default:
+                    // Error, unexpected input type
+                    System.out.println("Error: unexpected text format");
+                    errorOccurred();
+            }
+        }
+
+        screenUI.createLbl(fieldNums, size, font, color, text);
+    }
+
+    /**
+     * Set the field number at the given index
+     * @param fieldNum list of field numbers
+     * @param index index to set in fieldNum
+     * @param numChar the character to put in fieldNum
+     * @return did an error occur?
+     */
+    private boolean setFieldNum(int[] fieldNum, int index, char numChar) {
+        fieldNum[index] = Character.getNumericValue(numChar);
+        if (fieldNum[index] < 0 || fieldNum[index] > 9) {
+            System.out.println("Field number must be numeric value");
+            errorOccurred();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Create a button based on the number and type
+     * @param mlString "xy" where x is the digit that represents screen location
+     *                 and y is the character that represents button type
+     */
+    private void createBtn(String mlString) {
+        ButtonType buttonType;
+        int fieldNum;
+
+        int lastIndex = mlString.length() - 1;
+
+        char buttonTypeChar = mlString.charAt(lastIndex); // last char
+        // Verify button type
+        switch (buttonTypeChar) {
+            case 'm' ->
+                // a toggle group button
+                    buttonType = ButtonType.MUTUALLY_EXCLUSIVE;
+            case 'x' ->
+                // A responsive button
+                    buttonType = ButtonType.RESPONSIVE;
+            default -> {
+                System.out.println("ERROR: button type must be 'x' or 'm'");
+                errorOccurred();
+                return;
+            }
+        }
+        String numS = mlString.substring(0, lastIndex); // the number String
+        try {
+            // Attempt to create a button
+            fieldNum = Integer.parseInt(numS);
+
+            if (fieldNum > 9 || fieldNum < 0) {
+                // field numbers are 0 to 9
+                System.out.println("ERROR: field numbers are 0 to 9");
+                errorOccurred();
+                return;
+            }
+            screenUI.createBtn(fieldNum, buttonType);
+
+        } catch (NumberFormatException e) {
+            // Input was not a number
+            System.out.println("ERROR: expecting digit input");
+            errorOccurred();
+            e.printStackTrace();
+        }
     }
 
 
@@ -100,9 +227,9 @@ public class Screen {
      * @param notifyMain notify main?
      */
     public void notify(int btnNumber, boolean notifyMain) {
-//        System.out.println(btnNumber + ", " + notifyMain);
         if (btnNumber == NULL_BTN) {
             // TODO notify IO-Port there is an issue
+            System.out.println("ERROR: gui related");
             errorOccurred();
         } else {
             if (notifyMain) {
@@ -122,6 +249,7 @@ public class Screen {
         if (pressedBtn == NULL_BTN) {
             // TODO send error message
             System.out.println("ERROR");
+            return;
         }
         //TODO: implement Communicator IO Port
         System.out.println(btnString(pressedBtn));
@@ -137,6 +265,7 @@ public class Screen {
         // info
         if (pressedBtn == NULL_BTN) {
             // Should never be called
+            System.out.println("ERROR: calling btnString() w/ pressedBtn == NULL_BTN");
             errorOccurred();
             return "";
         } else if (selectedBtn == NULL_BTN) {
