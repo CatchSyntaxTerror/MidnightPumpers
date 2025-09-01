@@ -4,6 +4,97 @@ import java.util.ArrayList;
 
 public class MarkdownLanguage {
 
+    // Separate fields, separate command types, end command message
+    private static final char[] parseChars = new char[]{':', '*',';'};
+    public Commands getCommands(String message) {
+        return null;
+    }
+
+    /**
+     * Gets markdown representation from commands
+     * @param commands both button and text field
+     * @return markdown string of this command
+     */
+    public String getMarkdown(Commands commands) {
+        StringBuilder strbuilder = new StringBuilder();
+        ArrayList<ButtonCommands.Button> buttonCommands = commands.getBCommands().buttonCommands;
+        ArrayList<TextFieldCommands.TextField> textCommands = commands.getTCommands().textFieldCommands;
+        strbuilder.append(getButtonMarkdown(buttonCommands));
+        strbuilder.append(parseChars[1]);
+        strbuilder.append(getTextFieldMarkdown(textCommands));
+        strbuilder.append(parseChars[0]);
+        strbuilder.append(parseChars[2]);
+        return strbuilder.toString();
+    }
+
+    /**
+     * Method for turning button commands list into a string
+     * @param buttonCommands the list of button commands
+     * @return a string for this list
+     */
+    private String getButtonMarkdown(ArrayList<ButtonCommands.Button> buttonCommands) {
+        StringBuilder strbuilder = new StringBuilder();
+        strbuilder.append("bc");
+        strbuilder.append(parseChars[0]);
+        for (ButtonCommands.Button buttonCommand : buttonCommands) {
+            strbuilder.append(parseChars[0]);
+            strbuilder.append(Integer.toString(buttonCommand.field));
+            strbuilder.append(parseChars[0]);
+            if (buttonCommand.mutualExclusion) {
+                strbuilder.append("t");
+                strbuilder.append(parseChars[0]);
+            } else {
+                strbuilder.append("f");
+                strbuilder.append(parseChars[0]);
+            }
+            if (buttonCommand.responsive) {
+                strbuilder.append("t");
+                strbuilder.append(parseChars[0]);
+            } else {
+                strbuilder.append("f");
+                strbuilder.append(parseChars[0]);
+            }
+        }
+        return strbuilder.toString();
+    }
+
+    /**
+     * Parses text commands into a string message
+     * @param textCommands the commands to parse
+     * @return a string in the mark-down language
+     */
+    private String getTextFieldMarkdown(ArrayList<TextFieldCommands.TextField> textCommands) {
+        StringBuilder strbuilder = new StringBuilder();
+        strbuilder.append("tc");
+        strbuilder.append(parseChars[0]);
+        for (TextFieldCommands.TextField textCommand : textCommands) {
+            strbuilder.append(parseChars[0]);
+            strbuilder.append(textCommand.text);
+            strbuilder.append(parseChars[0]);
+            strbuilder.append(Integer.toString(textCommand.field));
+            strbuilder.append(parseChars[0]);
+            switch (textCommand.bgColor) {
+                case White -> strbuilder.append('w');
+                case Unspecified -> strbuilder.append('x');
+            }
+            strbuilder.append(parseChars[0]);
+            switch (textCommand.font) {
+                case Normal -> strbuilder.append('n');
+                case Bold -> strbuilder.append('b');
+                case Italic -> strbuilder.append('i');
+                case Unspecified -> strbuilder.append('x');
+            }
+            strbuilder.append(parseChars[0]);
+            switch(textCommand.size) {
+                case Large -> strbuilder.append('l');
+                case Medium -> strbuilder.append('m');
+                case Small -> strbuilder.append('s');
+                case Unspecified -> strbuilder.append('x');
+            }
+        }
+        return strbuilder.toString();
+    }
+
     public static class Commands {
         private ButtonCommands bCommands;
         private TextFieldCommands tCommands;
@@ -87,22 +178,22 @@ public class MarkdownLanguage {
 
     }
     public static class TextFieldCommands {
-        private ArrayList<TextField> fields;
+        private ArrayList<TextField> textFieldCommands;
 
         /**
          * Makes a new text field command
          */
-        public TextFieldCommands() {this.fields = new ArrayList<>();}
+        public TextFieldCommands() {this.textFieldCommands = new ArrayList<>();}
 
         /**
          * @return the list of field commands
          */
-        public ArrayList<TextField> getFields() {return fields;}
+        public ArrayList<TextField> getTextFieldCommands() {return textFieldCommands;}
 
         /**
          * @param command the command to be added to the list
          */
-        public void addFieldCommand(TextField command) {this.fields.add(command);}
+        public void addFieldCommand(TextField command) {this.textFieldCommands.add(command);}
         public static class TextField {
 
             /**
