@@ -30,19 +30,21 @@ public class ScreenUI extends Application {
     // CSS Style Strings
     private final String BLACK_SCRN   =
             "-fx-background-color: #000000;";
+    private final String WHITE_BACKGROUND =
+            "-fx-background-color: #FFFFFF;";
     private final String SELECTED_BTN   =
-            "-fx-background-color: #133466, #133466;";
+            "-fx-background-color: #F3DD00, #F3DD00;";
     private final String UNSELECTED_BTN =
-            "-fx-background-color: #133466, #F9EFE0; -fx-background-insets: 0px, 3px;";
+            "-fx-background-color: #F3DD00, #000000; -fx-background-insets: 0px, 3px;";
     private final String RESPONSIVE_BTN =
-            "-fx-background-color: #D89733, #DDE8F8; -fx-background-insets: 0px, 3px;";
+            "-fx-background-color: #000961, #E5E8FF; -fx-background-insets: 0px, 4px;";
     private final String ITALIC = "-fx-font-style: italic;";
     private final String BOLD   = "-fx-font-weight: bold;";
 
     // Fonts
-    private final Font SMALL_FNT = new Font(15);
-    private final Font MED_FNT   = new Font(25);
-    private final Font LRG_FNT   = new Font(35);
+    private final Font SMALL_FNT = new Font(12);
+    private final Font MED_FNT   = new Font(15);
+    private final Font LRG_FNT   = new Font(20);
 
     // The Screen Object that this GUI is displaying
     private final Screen screen;
@@ -171,7 +173,7 @@ public class ScreenUI extends Application {
         //TODO: text box creation
         for (int i = 0; i < 10; i += 2) {
             int[] spanning = {i, i+1};
-            Label lbl = createLbl(spanning, 0, 0, 0, spanning[0] + "" + spanning[1]);
+            createLbl(spanning, 0, 0, 0, spanning[0] + "" + spanning[1]);
         }
     }
 
@@ -221,15 +223,19 @@ public class ScreenUI extends Application {
                 // text spans two fields
                 if ((txtFieldNums[0] + 1) != txtFieldNums[1]) {
                     // Miss-input, throw error
+                    System.out.println("ERROR: text must span two adjacent fields");
                     sendErrorMsg();
                 } else {
                     // text spans two fields
                     lbl = createLbl(rowI, 1, 2);
                 }
             }
-            default ->
+            default -> {
                 // ERROR, unexpected number of field numbers
-                    sendErrorMsg();
+                System.out.println("ERROR: unexpected number of field numbers");
+                sendErrorMsg();
+            }
+
         }
 
         return lbl;
@@ -244,12 +250,51 @@ public class ScreenUI extends Application {
      * @param str the string of text to display
      * @return the created label
      */
-    private Label createLbl(int[] txtFields, int fontSize, int fontType,
+    public void createLbl(int[] txtFields, int fontSize, int fontType,
                             int backColor, String str) {
         //TODO make this an object rather than a bunch of primitive types
+        for (int i:
+             txtFields) {
+            System.out.println(i);
+        }
         Label lbl = createLbl(txtFields);
         lbl.setText(str);
-        return lbl;
+        switch (fontSize) {
+            case 0:
+                // Small
+                lbl.setFont(SMALL_FNT);
+                break;
+            case 2:
+                // Large
+                lbl.setFont(LRG_FNT);
+                break;
+            default:
+                // Medium
+                lbl.setFont(MED_FNT);
+        }
+        switch (fontType) {
+            case 0:
+                // Italic
+                lbl.setStyle(ITALIC);
+                break;
+            case 2:
+                // Bold
+                lbl.setStyle(BOLD);
+                break;
+            default:
+                // Regular font
+        }
+        switch (backColor) {
+            case 1:
+                // Grey
+                lbl.setStyle(WHITE_BACKGROUND);
+            case 2:
+                // Light Blue
+                lbl.setStyle(WHITE_BACKGROUND);
+            default:
+                // White
+                lbl.setStyle(WHITE_BACKGROUND);
+        }
     }
 
     /**
@@ -309,7 +354,7 @@ public class ScreenUI extends Application {
      * @param btnNumber the button location id
      * @param btnType the type of this button
      */
-    private void createBtn(int btnNumber, ButtonType btnType) {
+    public void createBtn(int btnNumber, ButtonType btnType) {
         ToggleButton btn = createBtn(btnNumber);
         if (btnType == ButtonType.RESPONSIVE) {
             // Responsive Button
@@ -379,7 +424,7 @@ public class ScreenUI extends Application {
         primaryStage.setScene(new Scene(screenUI.getScene(), DISP_W, DISP_H));
         primaryStage.show();
 
-        scr.setScreen("t3-s2-f1-c0-text:b4m:b5m:b10x");
+        scr.setScreen("t4-s0-f0-c0-text label one:t5-my next text box:t01-this field:b4m:b5m:b9x");
     }
 }
 
