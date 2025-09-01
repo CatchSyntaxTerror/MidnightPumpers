@@ -28,6 +28,8 @@ public class ScreenUI extends Application {
     private final int  BTN_FACTOR =   8; /* buttons take up an eighth of the
                                              horizontal space */
     // CSS Style Strings
+    private final String BLACK_SCRN   =
+            "-fx-background-color: #000000;";
     private final String SELECTED_BTN   =
             "-fx-background-color: #133466, #133466;";
     private final String UNSELECTED_BTN =
@@ -42,14 +44,17 @@ public class ScreenUI extends Application {
     private final Font MED_FNT   = new Font(25);
     private final Font LRG_FNT   = new Font(35);
 
+    // The Screen Object that this GUI is displaying
+    private final Screen screen;
+
+    // The Toggle Group
+    private final ToggleGroup TOGGLE_GROUP; // For mutually exclusive buttons
+
+    // The grid pane
+    private final GridPane GRID_PANE;
 
 
-    // Non-Constant Global Variables:
-    private GridPane          gridPane; // the meat of the display
-    private ToggleGroup    toggleGroup; // For mutually exclusive buttons
 
-    // The Screen Object
-    private final Screen screen; // The screen that this GUI is displaying
 
     /**
      * launches JavaFX application
@@ -62,7 +67,9 @@ public class ScreenUI extends Application {
      * The screen constructor
      */
     public ScreenUI() {
+        GRID_PANE = new GridPane(HORZ, VERT);
         this.screen = new Screen();
+        TOGGLE_GROUP = new ToggleGroup();
         resetGrid();
     }
 
@@ -71,29 +78,39 @@ public class ScreenUI extends Application {
      * @param scr the screen to picture
      */
     public ScreenUI(Screen scr) {
+        GRID_PANE = new GridPane(HORZ, VERT);
         this.screen = scr;
+        this.screen.setScreenUI(this);
+        TOGGLE_GROUP = new ToggleGroup();
         resetGrid();
+    }
+    private void clearGP() {
+        GRID_PANE.getChildren().clear(); // clear the grid pane
     }
     /**
      * Set up the grid
      */
     private void resetGrid() {
-        //TODO: redraw display after a call to resetGrid()
-        gridPane = new GridPane(HORZ, VERT);
+        clearGP();
+
         setGridConstraints();
         setUpToggleGroup();
 
-        //TODO: delete these methods, they are for testing purposes
-        createButtons();
-        createTextBoxes();
+        setBlank();
+    }
+    /**
+     * Make the display blank
+     */
+    public void setBlank() {
+        clearGP();
+        GRID_PANE.setStyle(BLACK_SCRN);
     }
 
     /**
      * Establishes multi-select behavior
      */
     private void setUpToggleGroup() {
-        toggleGroup = new ToggleGroup();
-        toggleGroup.selectedToggleProperty().addListener(
+        TOGGLE_GROUP.selectedToggleProperty().addListener(
                 (observable, oldToggle, newToggle) -> {
             if (newToggle != null) {
                 // Set selected button color
@@ -126,7 +143,7 @@ public class ScreenUI extends Application {
             /* For each column, set the column constraints to a percent of the
                screen width */
             col = new ColumnConstraints();
-            gridPane.getColumnConstraints().add(col);
+            GRID_PANE.getColumnConstraints().add(col);
             if(i != 0 && i != (NUM_COLS - 1)) {
                 // Text columns have less width
                 col.setPercentWidth(txtPercent);
@@ -140,7 +157,7 @@ public class ScreenUI extends Application {
             /* For each row, set the row constraints to a percent of the screen
                height*/
             row = new RowConstraints();
-            gridPane.getRowConstraints().add(row);
+            GRID_PANE.getRowConstraints().add(row);
             row.setPercentHeight(rowPercent);
         }
 
@@ -174,7 +191,7 @@ public class ScreenUI extends Application {
         HBox.setHgrow(lbl, Priority.ALWAYS);
         hBox.setAlignment(Pos.CENTER);
 
-        gridPane.add(hBox, col, row);
+        GRID_PANE.add(hBox, col, row);
         GridPane.setColumnSpan(hBox, span);
         return lbl;
     }
@@ -219,7 +236,7 @@ public class ScreenUI extends Application {
     }
 
     /**
-     Create a label with all of this dynamicism
+     Create a label with all of this dynamics
      * @param txtFields the field(s) this text spans
      * @param fontSize font size
      * @param fontType font type
@@ -264,7 +281,7 @@ public class ScreenUI extends Application {
         //Coloring
         btn.setStyle(UNSELECTED_BTN);
 
-        gridPane.add(hBox, col, row);
+        GRID_PANE.add(hBox, col, row);
         return btn;
     }
 
@@ -299,12 +316,12 @@ public class ScreenUI extends Application {
             // style
             btn.setStyle(RESPONSIVE_BTN);
             btn.setOnMouseClicked(event -> {
-                // Notify the Communicator and reset the grid
+                // Notify the Communicator
                 notifyScreen(btnNumber, true);
             });
         } else {
             // Multi-Select Button, add it to the toggle group
-            btn.setToggleGroup(toggleGroup);
+            btn.setToggleGroup(TOGGLE_GROUP);
 
             btn.setOnMouseClicked(event -> {
                 // Track the number associated with this button
@@ -316,14 +333,11 @@ public class ScreenUI extends Application {
     /**
      Notify the screen that a button was pressed
      * @param btnNumber the button that was pressed
-     * @param exclusiveSelect was the button a exlusive select button?
+     * @param exclusiveSelect was the button an exclusive select button?
      */
     private void notifyScreen(int btnNumber, boolean exclusiveSelect) {
         screen.notify(btnNumber, exclusiveSelect);
     }
-
-
-
 
     /**
      * Notify Main System that an error happened
@@ -339,7 +353,7 @@ public class ScreenUI extends Application {
      * @return the grid pane (for display purposes)
      */
     private Parent getScene() {
-        return gridPane;
+        return GRID_PANE;
     }
     /**
      * The main entry point for all JavaFX applications.
@@ -359,11 +373,13 @@ public class ScreenUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Screen scr = new Screen();
-        scr.setScreen("t3s:2f1:c0:text:b4m:b5m:b10:x;");
-        primaryStage.setTitle("Touch Screen Display");
         ScreenUI screenUI = new ScreenUI(scr);
+
+        primaryStage.setTitle("Touch Screen Display");
         primaryStage.setScene(new Scene(screenUI.getScene(), DISP_W, DISP_H));
         primaryStage.show();
+
+        scr.setScreen("t3-s2-f1-c0-text:b4m:b5m:b10x");
     }
 }
 

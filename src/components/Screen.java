@@ -15,16 +15,13 @@ import UI.ScreenUI;
 //  -Sent message(s): text/button layouts
 // - Store button presses
 public class Screen {
+    // Constants
+    private final String REGEX = "[:]"; // split messages by the ':' character
+    // Button Tracking
     private final int NULL_BTN    =  -1; // signifies no button selected
     private int selectedBtn = NULL_BTN; // the fuel grade selection
 
     private ScreenUI screenUI = null;
-    /**
-     * The screen constructor
-     */
-
-    public Screen() {
-    }
 
     /**
      * A screen UI setter
@@ -39,15 +36,62 @@ public class Screen {
      * @param screenStr the mark-down language string
      */
     public void setScreen(String screenStr) {
-        //"t3s:2f1:c0:text:b4m:b5m:b10:x;"
-        for (char c: screenStr.toCharArray()) {
-            if (c == ';') {
-                // DONE
-                break;
-            }
+        //"t3-s2-f1-c0-text:b4m:b5m:b10x"
+        // split the strings by semicolons
+        String[] instructions = screenStr.split(REGEX);
 
+        if (screenUI == null) {
+            // Error, cannot set display of a null screen
+            errorOccurred();
+        } else if (screenStr.length() == 0) {
+            // Blank Screen
+            screenUI.setBlank();
+            System.out.println("Set the screen to be blank");
+        } else {
+            for (String inst : instructions) {
+                updateScreenUI(inst);
+            }
         }
 
+    }
+
+    /**
+     * Update the screen with the following instruction
+     * @param mlString the instruction to follow
+     */
+    private void updateScreenUI(String mlString) {
+        char fst = mlString.charAt(0);
+        if (fst == 't') {
+            // text box instruction
+        } else if (fst == 'b') {
+            // button instruction
+            int lastIndex = mlString.length() - 1;
+            char buttonType = mlString.charAt(lastIndex); // last char
+            String numS = mlString.substring(1, lastIndex); // the number String
+
+            // TODO GUI button creation
+            try {
+                int fieldNum = Integer.parseInt(numS);
+                System.out.println("Converted integer: " + fieldNum);
+            } catch (NumberFormatException e) {
+                errorOccurred();
+                e.printStackTrace();
+            }
+
+
+        } else {
+            // Only expecting text and button instructions
+            errorOccurred();
+        }
+
+    }
+
+
+    /**
+     * Notify communicator of an error
+     */
+    private void errorOccurred() {
+        notifyCommunicator(NULL_BTN);
     }
 
     /**
@@ -59,7 +103,7 @@ public class Screen {
 //        System.out.println(btnNumber + ", " + notifyMain);
         if (btnNumber == NULL_BTN) {
             // TODO notify IO-Port there is an issue
-            notifyCommunicator(btnNumber);
+            errorOccurred();
         } else {
             if (notifyMain) {
                 //TODO notify IO-Port of this state
@@ -75,8 +119,12 @@ public class Screen {
      * IO Port
      */
     private void notifyCommunicator(int pressedBtn) {
-        System.out.println(btnString(pressedBtn));
+        if (pressedBtn == NULL_BTN) {
+            // TODO send error message
+            System.out.println("ERROR");
+        }
         //TODO: implement Communicator IO Port
+        System.out.println(btnString(pressedBtn));
     }
     /**
      * for communicating with the Main System
@@ -87,15 +135,19 @@ public class Screen {
         //TODO: make more modular? State object rather than String?
         //TODO: make sure everyone is on the same page about button messaging
         // info
-        if (selectedBtn == NULL_BTN) {
+        if (pressedBtn == NULL_BTN) {
+            // Should never be called
+            errorOccurred();
+            return "";
+        } else if (selectedBtn == NULL_BTN) {
             // No button selected, only notify of the responsive button press
-            return pressedBtn + ";";
+            return pressedBtn + "";
         } else {
             /* Return fuel grade selection and responsive button, and reset 
             button selection */
             int val = selectedBtn;
             selectedBtn = NULL_BTN;
-            return pressedBtn + ":" + val + ";";
+            return pressedBtn + ":" + val;
         }
     }
 }
