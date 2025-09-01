@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
@@ -18,8 +19,8 @@ import javafx.stage.Stage;
  */
 public class ScreenUI extends Application {
     // Constants:
-    private final double HORZ     =   1; // the horizontal gap of the grid
-    private final double VERT     =   1; // the vertical gap of the grid
+    private final double HORZ     =   0; // the horizontal gap of the grid
+    private final double VERT     =   0; // the vertical gap of the grid
     private final double DISP_W   = 300; // the GUI's initial width
     private final double DISP_H   = 250; // the GUI's initial height
     private final int  NUM_COLS   =   4; // number of columns on the grid
@@ -27,8 +28,21 @@ public class ScreenUI extends Application {
     private final int  BTN_FACTOR =   8; /* buttons take up an eighth of the
                                              horizontal space */
     // CSS Style Strings
-    private final String SELECTED_CLR   = "-fx-background-color: lightblue;";
-    private final String UNSELECTED_CLR = "-fx-background-color: lightgray;";
+    private final String SELECTED_BTN   =
+            "-fx-background-color: #133466, #133466;";
+    private final String UNSELECTED_BTN =
+            "-fx-background-color: #133466, #F9EFE0; -fx-background-insets: 0px, 3px;";
+    private final String RESPONSIVE_BTN =
+            "-fx-background-color: #D89733, #DDE8F8; -fx-background-insets: 0px, 3px;";
+    private final String ITALIC = "-fx-font-style: italic;";
+    private final String BOLD   = "-fx-font-weight: bold;";
+
+    // Fonts
+    private final Font SMALL_FNT = new Font(15);
+    private final Font MED_FNT   = new Font(25);
+    private final Font LRG_FNT   = new Font(35);
+
+
 
     // Non-Constant Global Variables:
     private GridPane          gridPane; // the meat of the display
@@ -51,8 +65,10 @@ public class ScreenUI extends Application {
         this.screen = new Screen();
         resetGrid();
     }
+
     /**
      * The screen constructor
+     * @param scr the screen to picture
      */
     public ScreenUI(Screen scr) {
         this.screen = scr;
@@ -81,11 +97,11 @@ public class ScreenUI extends Application {
                 (observable, oldToggle, newToggle) -> {
             if (newToggle != null) {
                 // Set selected button color
-                ((ToggleButton) newToggle).setStyle(SELECTED_CLR);
+                ((ToggleButton) newToggle).setStyle(SELECTED_BTN);
             }
             if (oldToggle != null) {
                 // Set unselected button color
-                ((ToggleButton) oldToggle).setStyle(UNSELECTED_CLR);
+                ((ToggleButton) oldToggle).setStyle(UNSELECTED_BTN);
             }
         });
     }
@@ -246,7 +262,7 @@ public class ScreenUI extends Application {
         hBox.setAlignment(Pos.CENTER);
 
         //Coloring
-        btn.setStyle(UNSELECTED_CLR);
+        btn.setStyle(UNSELECTED_BTN);
 
         gridPane.add(hBox, col, row);
         return btn;
@@ -280,10 +296,11 @@ public class ScreenUI extends Application {
         ToggleButton btn = createBtn(btnNumber);
         if (btnType == ButtonType.RESPONSIVE) {
             // Responsive Button
+            // style
+            btn.setStyle(RESPONSIVE_BTN);
             btn.setOnMouseClicked(event -> {
                 // Notify the Communicator and reset the grid
                 notifyScreen(btnNumber, true);
-                resetGrid();
             });
         } else {
             // Multi-Select Button, add it to the toggle group
@@ -312,8 +329,7 @@ public class ScreenUI extends Application {
      * Notify Main System that an error happened
      */
     private void sendErrorMsg() {
-        //TODO - implement Communicator IO Port
-        System.out.println("ERROR");
+        notifyScreen(-1, false);
     }
 
 
@@ -342,9 +358,11 @@ public class ScreenUI extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Screen scr = new Screen();
+        scr.setScreen("t3s:2f1:c0:text:b4m:b5m:b10:x;");
         primaryStage.setTitle("Touch Screen Display");
-        ScreenUI scr = new ScreenUI(new Screen());
-        primaryStage.setScene(new Scene(scr.getScene(), DISP_W, DISP_H));
+        ScreenUI screenUI = new ScreenUI(scr);
+        primaryStage.setScene(new Scene(screenUI.getScene(), DISP_W, DISP_H));
         primaryStage.show();
     }
 }

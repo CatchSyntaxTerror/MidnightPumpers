@@ -1,5 +1,7 @@
 package components;
 
+import UI.ScreenUI;
+
 /**
  * Joel Villarreal
  * The touch screen display object, for simulation purposes
@@ -12,17 +14,39 @@ package components;
 //  - Received message(s): button presses
 //  -Sent message(s): text/button layouts
 // - Store button presses
-public class Screen implements Runnable {
+public class Screen {
     private final int NULL_BTN    =  -1; // signifies no button selected
     private int selectedBtn = NULL_BTN; // the fuel grade selection
 
+    private ScreenUI screenUI = null;
+    /**
+     * The screen constructor
+     */
+
+    public Screen() {
+    }
 
     /**
-     * Runs this operation.
+     * A screen UI setter
+     * @param scrUI
      */
-    //TODO: make this screen runnable
-    @Override
-    public void run() {
+    public void setScreenUI(ScreenUI scrUI) {
+        this.screenUI = scrUI;
+    }
+
+    /**
+     * Set the screen display based on text
+     * @param screenStr the mark-down language string
+     */
+    public void setScreen(String screenStr) {
+        //"t3s:2f1:c0:text:b4m:b5m:b10:x;"
+        for (char c: screenStr.toCharArray()) {
+            if (c == ';') {
+                // DONE
+                break;
+            }
+
+        }
 
     }
 
@@ -51,7 +75,7 @@ public class Screen implements Runnable {
      * IO Port
      */
     private void notifyCommunicator(int pressedBtn) {
-        System.out.println(getScreenState(pressedBtn));
+        System.out.println(btnString(pressedBtn));
         //TODO: implement Communicator IO Port
     }
     /**
@@ -59,7 +83,7 @@ public class Screen implements Runnable {
      * @param pressedBtn the responsive button responsible for the notify call
      * @return the screens current state
      */
-    private String getScreenState(int pressedBtn) {
+    private String btnString(int pressedBtn) {
         //TODO: make more modular? State object rather than String?
         //TODO: make sure everyone is on the same page about button messaging
         // info
