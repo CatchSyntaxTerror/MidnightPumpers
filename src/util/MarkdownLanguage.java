@@ -7,6 +7,42 @@ public class MarkdownLanguage {
     // Separate fields, separate command types, end command message
     private static final char[] parseChars = new char[]{':', '*',';'};
     public Commands getCommands(String message) {
+        if (message.length() <= 2) return null;
+        enum commandType {
+            Button,
+            TextField,
+            Unspecified;
+        }
+        commandType messageType = commandType.Unspecified;
+        switch (message.substring(0,2)) {
+            case "bc" -> messageType = commandType.Button;
+            case "tc" -> messageType = commandType.TextField;
+            default -> {
+                return null;
+            }
+        }
+        ButtonCommands buttonCommands = null;
+        TextFieldCommands textFieldCommands = null;
+
+        if (messageType == commandType.Button) {
+            //TODO: Parse part of string thats for buttons into here
+            //buttonCommands = getButtonCommands();
+        }
+        if (messageType == commandType.TextField) {
+            //TODO: parse part of string thats for text fields into here
+            //textFieldCommands = getTextFieldCommands();
+        }
+        Commands commands = new Commands(buttonCommands,textFieldCommands);
+        return commands;
+    }
+
+    public ButtonCommands getButtonCommands(String message) {
+        //TODO: parse button markdown into button commands
+        return null;
+    }
+
+    public TextFieldCommands getTextFieldCommands (String message) {
+        //TODO: parse text field markdown into text field commands
         return null;
     }
 
@@ -22,7 +58,6 @@ public class MarkdownLanguage {
         strbuilder.append(getButtonMarkdown(buttonCommands));
         strbuilder.append(parseChars[1]);
         strbuilder.append(getTextFieldMarkdown(textCommands));
-        strbuilder.append(parseChars[0]);
         strbuilder.append(parseChars[2]);
         return strbuilder.toString();
     }
