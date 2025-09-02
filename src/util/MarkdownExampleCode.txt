@@ -1,0 +1,15 @@
+private static final ButtonCommands.Button exampleButton1 =
+            new ButtonCommands.Button(0,false,false);
+
+    private static final ButtonCommands.Button exampleButton2 =
+            new ButtonCommands.Button(1,false,true);
+    private static final TextFieldCommands.TextField exampleField1 =
+            new TextFieldCommands.TextField("Hi",0);
+    private static final TextFieldCommands.TextField getExampleField2 =
+            new TextFieldCommands.TextField(
+                    "SmallItalics",
+                    23,
+                    TextFieldCommands.TextField.Size.Small,
+                    TextFieldCommands.TextField.Font.Italic,
+                    TextFieldCommands.TextField.BGColor.Unspecified);
+    private static final Commands exampleCommands = new Commands();
