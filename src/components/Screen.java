@@ -1,7 +1,14 @@
 package components;
 
+import IOPort.CommunicatorClient;
+import IOPort.CommunicatorServer;
 import UI.ButtonType;
 import UI.ScreenUI;
+import util.MarkdownLanguage;
+
+import java.util.ArrayList;
+
+import static util.PortAddresses.SCREEN_PORT;
 
 /**
  * Joel Villarreal
@@ -9,12 +16,6 @@ import UI.ScreenUI;
  */
 //TODO:
 // - Connect to IO Port
-//  - Received message(s): text/button layouts
-//  - Sent message(s): button presses
-// - Connect to the GUI
-//  - Received message(s): button presses
-//  -Sent message(s): text/button layouts
-// - Store button presses
 public class Screen {
     // Constants
     private final String REGEX_0 = ":"; // split messages by the ':' character
@@ -25,6 +26,12 @@ public class Screen {
     // Button Tracking
     private int selectedBtn = NULL_BTN; // the fuel grade selection
 
+    // Screen has a Communicator type IO Port (client or server?)
+    //TODO: IOPort
+//    private final CommunicatorClient communicator = new CommunicatorClient(SCREEN_PORT);
+//    private final CommunicatorServer communicator = new CommunicatorServer(SCREEN_PORT);
+
+
     // The gui
     private ScreenUI screenUI = null;
 
@@ -34,6 +41,84 @@ public class Screen {
      */
     public void setScreenUI(ScreenUI scrUI) {
         this.screenUI = scrUI;
+    }
+
+    /**
+     * Set the screen based on commands
+     * @param cmds the commands
+     */
+    public void setScreen(MarkdownLanguage.Commands cmds) {
+        if (screenUI == null) {
+            System.out.println("ERROR: Screen UI not instantiated");
+            errorOccurred();
+            return;
+        }
+        MarkdownLanguage.ButtonCommands bCmds = cmds.getBCommands();
+        MarkdownLanguage.TextFieldCommands tCmds = cmds.getTCommands();
+
+        ArrayList<MarkdownLanguage.ButtonCommands.Button> btns = bCmds.getButtonCommands();
+        ArrayList<MarkdownLanguage.TextFieldCommands.TextField> txts = tCmds.getTextFieldCommands();
+
+        for (MarkdownLanguage.ButtonCommands.Button b: btns) {
+            // Create buttons
+            createBtn(b);
+        }
+        for (MarkdownLanguage.TextFieldCommands.TextField t: txts) {
+            // Create text boxes
+            createTxt(t);
+        }
+    }
+
+    /**
+     * Create a text box on the UI
+     * @param t
+     */
+    private void createTxt(MarkdownLanguage.TextFieldCommands.TextField t) {
+        if (screenUI == null) {
+            System.out.println("Error: screen not initialized");
+            errorOccurred();
+        }
+        int size, font, color;
+        String text = t.getText();
+        int[] fieldNums = {t.getField()}; //TODO need more than single field sometimes
+        MarkdownLanguage.TextFieldCommands.TextField.Size sz = t.getSize();
+        MarkdownLanguage.TextFieldCommands.TextField.Font fnt = t.getFont();
+        MarkdownLanguage.TextFieldCommands.TextField.BGColor bgColor = t.getBGColor();
+        switch (sz) {
+            // set size
+            case Small -> size = 0;
+            case Large -> size = 2;
+            default -> size = 1;
+        }
+        switch (fnt) {
+            // set font type
+            case Italic -> font = 0;
+            case Bold -> font = 2;
+            default -> font = 1;
+        }
+        switch (bgColor) {
+            // set background color
+            default -> color = 1;
+        }
+        screenUI.createLbl(fieldNums, size, font, color, text);
+    }
+
+    /**
+     * Create a button on the UI
+     * @param btn
+     */
+    private void createBtn(MarkdownLanguage.ButtonCommands.Button btn) {
+        if (screenUI == null) {
+            System.out.println("Error: screen not initialized");
+            errorOccurred();
+        }
+        int btnNum = btn.getField();
+        boolean isResponsive = btn.getResponsive();
+        if (isResponsive) {
+            screenUI.createBtn(btnNum, ButtonType.RESPONSIVE);
+        } else {
+            screenUI.createBtn(btnNum, ButtonType.MUTUALLY_EXCLUSIVE);
+        }
     }
 
     /**
@@ -228,12 +313,10 @@ public class Screen {
      */
     public void notify(int btnNumber, boolean notifyMain) {
         if (btnNumber == NULL_BTN) {
-            // TODO notify IO-Port there is an issue
             System.out.println("ERROR: gui related");
             errorOccurred();
         } else {
             if (notifyMain) {
-                //TODO notify IO-Port of this state
                 notifyCommunicator(btnNumber);
             } else {
                 // store the button press
@@ -249,10 +332,12 @@ public class Screen {
         if (pressedBtn == NULL_BTN) {
             // TODO send error message
             System.out.println("ERROR");
+//            communicator.send("ERROR");
             return;
         }
         //TODO: implement Communicator IO Port
         System.out.println(btnString(pressedBtn));
+//        communicator.send(btnString(pressedBtn));
     }
     /**
      * for communicating with the Main System
