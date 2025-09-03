@@ -1,5 +1,6 @@
 package util;
 
+import java.awt.*;
 import java.util.ArrayList;
 import util.MarkdownConstants;
 
@@ -33,15 +34,18 @@ public class MarkdownLanguage {
 
         if (messageType == commandType.Button) {
             String buttonMarkdown = splitString[0];
-            //TODO: Parse part of string thats for buttons into here
-            //buttonCommands = getButtonCommands();
+            System.out.println(buttonMarkdown);
+            buttonCommands = getButtonCommands(buttonMarkdown);
+            if (splitString.length > 1) {
+                messageType = commandType.TextField;
+            }
         }
         if (messageType == commandType.TextField) {
             String textFieldMarkdown;
             if (splitString.length == 1) textFieldMarkdown = splitString[0];
             else textFieldMarkdown = splitString[1];
-            //TODO: parse part of string thats for text fields into here
-            //textFieldCommands = getTextFieldCommands();
+
+            textFieldCommands = getTextFieldCommands(textFieldMarkdown);
         }
         Commands commands = new Commands(buttonCommands,textFieldCommands);
         return commands;
@@ -49,7 +53,45 @@ public class MarkdownLanguage {
 
     public static ButtonCommands getButtonCommands(String message) {
         //TODO: parse button markdown into button commands
-        return null;
+        if (!message.substring(0,3).equals("bc/")) return null;
+        String next = message.substring(3);
+        ButtonCommands bCommands = new ButtonCommands();
+        do {
+            if (next == null || next.isEmpty()) {
+                return bCommands;
+            }
+            String regex = "" + parseChars[0];
+            String commandRegex = "" + parseChars[3];
+            String []parsedCommand = next.split(regex);
+            for (int i = 0; i < 3;i++) {
+                System.out.println(parsedCommand[i]);
+            }
+            if (parsedCommand.length < 3) return null;
+            String nextInt = next.split(regex)[0];
+            int field;
+            try {
+                field = Integer.parseInt(nextInt);
+            } catch (NumberFormatException e) {
+                return null;
+                //Invalid format
+            }
+            boolean mutualExcl;
+            if (parsedCommand[1].equals("t")) mutualExcl = true;
+            else mutualExcl = false;
+            boolean respons;
+            if (parsedCommand[2].equals("t")) respons = true;
+            else respons = false;
+            bCommands.addButtonCommand(new ButtonCommands.Button(field,mutualExcl,respons));
+            String newNext = "";
+            String[] parsedNext = next.split(commandRegex);
+            for (int i = 1; i < parsedNext.length; i++) {
+                newNext = newNext + parsedNext[i] + parseChars[3];
+            }
+            next = newNext;
+            System.out.println(next);
+        } while(bCommands.getButtonCommands().size() < 10);
+
+        return bCommands;
     }
 
     public static TextFieldCommands getTextFieldCommands (String message) {
