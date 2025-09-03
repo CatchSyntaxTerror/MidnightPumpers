@@ -4,6 +4,7 @@ import IOPort.CommunicatorClient;
 import IOPort.CommunicatorServer;
 import UI.ButtonType;
 import UI.ScreenUI;
+import util.MarkdownConstants;
 import util.MarkdownLanguage;
 
 import java.util.ArrayList;
@@ -81,9 +82,9 @@ public class Screen {
         int size, font, color;
         String text = t.getText();
         int[] fieldNums = {t.getField()}; //TODO need more than single field sometimes
-        MarkdownLanguage.TextFieldCommands.TextField.Size sz = t.getSize();
-        MarkdownLanguage.TextFieldCommands.TextField.Font fnt = t.getFont();
-        MarkdownLanguage.TextFieldCommands.TextField.BGColor bgColor = t.getBGColor();
+        MarkdownConstants.Size sz = t.getSize();
+        MarkdownConstants.Font fnt = t.getFont();
+        MarkdownConstants.BGColor bgColor = t.getBGColor();
         switch (sz) {
             // set size
             case Small -> size = 0;
