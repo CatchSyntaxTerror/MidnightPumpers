@@ -1,5 +1,6 @@
 package UI;
 
+import components.CCReader;
 import components.Flowmeter;
 import components.Nuzzle;
 import components.Pump;
@@ -15,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import sim.Gas;
 
 public class GasStation extends Application {
     private static final AnchorPane anchorPane = new AnchorPane();
@@ -22,10 +24,14 @@ public class GasStation extends Application {
     private Nuzzle nuzzle = new Nuzzle();
     private Flowmeter flowmeter = new Flowmeter();
     private Pump pump = new Pump();
+    private CCReader ccReader = new CCReader();
 
+    private Gas gas = new Gas();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        this.pump.setGas(gas);
+        this.flowmeter.setGas(gas);
         Group root = new Group();
         anchorPane.setPrefHeight(750);
         anchorPane.setPrefWidth(750);
@@ -52,7 +58,7 @@ public class GasStation extends Application {
 
         Rectangle screen = new Rectangle(515,400,100, 50);
         screen.setFill(Color.WHITE);
-        screen.setOnMouseClicked(event -> textFlow(this.flowmeter));
+        //screen.setOnMouseClicked(event -> textFlow(this.flowmeter));
         Text flowNum = new Text(525,430,"0000");
         flowNum.setFont(Font.font(35));
 
@@ -80,6 +86,10 @@ public class GasStation extends Application {
         Rectangle pump = new Rectangle(500,340,130,300);
         pump.setFill(Color.GREY);
         pump.setOnMouseClicked(event -> hosetoPump(this.nuzzle,endX,endY));
+
+        Rectangle cardReader = new Rectangle(550,500,50,50);
+        cardReader.setFill(Color.PURPLE);
+        cardReader.setOnMouseClicked(event -> sendCard());
 
         Rectangle car = new Rectangle(150,340,130,300);
         car.setFill(Color.RED);
@@ -110,12 +120,17 @@ public class GasStation extends Application {
         anchorPane.getChildren().add(backWindow);
         anchorPane.getChildren().add(carSlot);
         anchorPane.getChildren().add(pump);
+        anchorPane.getChildren().add(cardReader);
         anchorPane.getChildren().add(screen);
         anchorPane.getChildren().add(flowNum);
         anchorPane.getChildren().add(hose);
         anchorPane.getChildren().add(pumpSlot);
         anchorPane.getChildren().add(cirEnd);
         anchorPane.getChildren().add(cirHead);
+    }
+
+    private void sendCard() {
+        this.ccReader.sendCard();
     }
 
     private void textFlow(Flowmeter flowmeter) {
