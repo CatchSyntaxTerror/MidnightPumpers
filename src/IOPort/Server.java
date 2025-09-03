@@ -66,6 +66,19 @@ public class Server {
         }
     }
 
+    public boolean doneConnecting(){
+        boolean clientDone = true;
+        boolean serverDone = true;
+
+        for (IOPortClient client : clientMap.values()){
+            clientDone = clientDone && !client.notConnected;
+        }
+        for (IOPortServer server : serverMap.values()){
+            serverDone = serverDone && !server.notConnected;
+        }
+        return clientDone && serverDone;
+    }
+
     /**
      * Starts each server/client thread
      */

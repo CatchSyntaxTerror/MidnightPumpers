@@ -6,6 +6,11 @@ import javafx.scene.shape.Line;
 import IOPort.*;
 import util.*;
 
+/**
+ * This class is a device that checks to see if the hose is connected to the
+ * pump, car, or not connected and sends this information to main
+ * Author: Danny Thompson
+ */
 public class Nuzzle {
     private Line line;
     private Circle cirHead;

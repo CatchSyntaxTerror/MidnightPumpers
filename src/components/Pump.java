@@ -5,6 +5,11 @@ import sim.Gas;
 import IOPort.*;
 import util.*;
 
+/**
+ * This class is a device that turns on and off the gas flow based of the
+ * messages it recieves from main
+ * Author: Danny Thompson
+ */
 public class Pump implements Runnable {
     private Rectangle rectangle;
     private Gas gas;

@@ -18,6 +18,7 @@ public abstract class IOPortClient {
     public PrintWriter WRITER;
     public boolean ON;
     public UUID CLIENT_UUID;
+    public boolean notConnected = true;
 
     public IOPortClient(int port) {
         this.PORT = port;

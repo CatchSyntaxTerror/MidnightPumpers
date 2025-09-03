@@ -10,21 +10,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Actuator only sends messages cant read or peek
- * Author: Youssef Amin, Natalie Onion
+ * Author: Youssef Amin, Natalie Onion, Daniel Thompson
  */
 public class Actuator extends IOPortServer implements Runnable {
     public Actuator(int port) {
         super(port);
         SERVER_UUID = UUID.randomUUID();
-        try {
-            SERVER_SOCKET = new ServerSocket(port);
-            CLIENT_SOCKET = SERVER_SOCKET.accept();
-            LISTENER = new BufferedReader(new InputStreamReader(CLIENT_SOCKET.getInputStream()));
-            WRITER = new PrintWriter(CLIENT_SOCKET.getOutputStream(), true);
-            System.out.println("Server listening on port " + port);
-        } catch (Exception e) {
-            System.out.println("Could not start server on port " + port);
-        }
         INBOX = new LinkedBlockingQueue<>();
     }
 
@@ -91,6 +82,25 @@ public class Actuator extends IOPortServer implements Runnable {
      */
     @Override
     public void run() {
+        while(notConnected){
+            try {
+                System.out.println("Trying " + PORT);
+                SERVER_SOCKET = new ServerSocket(PORT);
+                CLIENT_SOCKET = SERVER_SOCKET.accept();
+                LISTENER = new BufferedReader(new InputStreamReader(CLIENT_SOCKET.getInputStream()));
+                WRITER = new PrintWriter(CLIENT_SOCKET.getOutputStream(), true);
+                System.out.println("Server listening on port " + PORT);
+                notConnected = false;
+            } catch (Exception e) {
+                System.out.println("Could not start server on port " + PORT);
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
         ON = true;
         while (ON) {
             receive();

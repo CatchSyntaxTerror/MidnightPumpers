@@ -22,6 +22,7 @@ public abstract class IOPortServer {
     public PrintWriter WRITER;
     public boolean ON;
     public UUID SERVER_UUID;
+    public boolean notConnected = true;
 
     public IOPortServer(int port) {
         this.PORT = port;
