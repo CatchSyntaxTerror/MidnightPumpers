@@ -11,21 +11,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Not totally sure if this is right
  * Status does not send messages only receives and executes
- * Author: Youssef Amin, Natalie Onion
+ * Author: Youssef Amin, Natalie Onion, Daniel Thompson
  */
 public class Status extends IOPortClient implements Runnable {
 
     public Status(int port) {
         super(port);
         CLIENT_UUID = UUID.randomUUID();
-        try {
-            connect(0);
-            LISTENER = new BufferedReader(new InputStreamReader(CLIENT_SOCKET.getInputStream()));
-            WRITER = new PrintWriter(CLIENT_SOCKET.getOutputStream(), true);
-            System.out.println("Server listening on port " + port);
-        } catch (Exception e) {
-            System.out.println("Could not start server on port " + port);
-        }
         INBOX = new LinkedBlockingQueue<>();
     }
 
@@ -93,6 +85,23 @@ public class Status extends IOPortClient implements Runnable {
      */
     @Override
     public void run() {
+        while (notConnected){
+            try {
+                System.out.println("Trying " + PORT);
+                connect(0);
+                LISTENER = new BufferedReader(new InputStreamReader(CLIENT_SOCKET.getInputStream()));
+                WRITER = new PrintWriter(CLIENT_SOCKET.getOutputStream(), true);
+                System.out.println("Server listening on port " + PORT);
+                 notConnected = false;
+            } catch (Exception e) {
+                System.out.println("Could not start server on port " + PORT);
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
         ON = true;
         while (ON) {
             receive();

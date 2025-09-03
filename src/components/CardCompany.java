@@ -2,6 +2,11 @@ package components;
 
 import IOPort.CommunicatorClient;
 import util.PortAddresses;
+/**
+ * This class is used to simulate the card company. It recieves card reader
+ * input and sends out whether the card was accepted or not
+ * Author: Danny Thompson
+ */
 
 public class CardCompany implements Runnable {
     private CommunicatorClient communicatorClient;

@@ -5,6 +5,11 @@ import sim.Gas;
 import IOPort.*;
 import util.*;
 
+/**
+ * This class is a device that tracks how much gas has been filled and
+ * sends messages to main to update the flow value
+ * Author: Danny Thompson
+ */
 public class Flowmeter implements Runnable {
     private Text text;
     private Gas gas;

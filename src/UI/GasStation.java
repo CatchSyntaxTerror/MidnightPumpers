@@ -14,15 +14,20 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sim.Gas;
-
+/**
+ * This class makes a visual to show the gas station and allows for user
+ * input for the hose and card reader
+ * Author: Danny Thompson
+ */
 public class GasStation extends Application {
     private static final AnchorPane anchorPane = new AnchorPane();
 
     //Calles all the constructors for the devices
+
     private Nuzzle nuzzle = new Nuzzle();
     private Flowmeter flowmeter = new Flowmeter();
-    private Pump pump = new Pump();
     private CCReader ccReader = new CCReader();
+    private Pump pump = new Pump();
     private CardCompany cardCompany = new CardCompany();
 
     //Threads for the devices that need them
