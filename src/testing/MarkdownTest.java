@@ -12,6 +12,10 @@ public class MarkdownTest {
         System.out.println(exMarkdown);
     }
 
+    /**
+     * Some example commands you can reference to use the mark-down language
+     * @return a commands object
+     */
     private static MarkdownLanguage.Commands exampleCommands() {
 
         MarkdownLanguage.ButtonCommands exampleBC = new MarkdownLanguage.ButtonCommands();
