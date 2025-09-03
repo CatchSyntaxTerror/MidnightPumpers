@@ -1,12 +1,16 @@
 package util;
 
 import java.util.ArrayList;
+import util.MarkdownConstants;
+
+import static util.MarkdownConstants.parseChars;
+import static util.MarkdownConstants.Size;
+import static util.MarkdownConstants.Font;
+import static util.MarkdownConstants.BGColor;
 
 public class MarkdownLanguage {
 
-    // Separate fields, separate command types, end command message
-    private static final char[] parseChars = new char[]{':', '*',';'};
-    public Commands getCommands(String message) {
+    public static Commands getCommands(String message) {
         if (message.length() <= 2) return null;
         enum commandType {
             Button,
@@ -24,11 +28,18 @@ public class MarkdownLanguage {
         ButtonCommands buttonCommands = null;
         TextFieldCommands textFieldCommands = null;
 
+        String []splitString = message.split(Character.toString(parseChars[1]));
+        if (splitString.length == 0) return null;
+
         if (messageType == commandType.Button) {
+            String buttonMarkdown = splitString[0];
             //TODO: Parse part of string thats for buttons into here
             //buttonCommands = getButtonCommands();
         }
         if (messageType == commandType.TextField) {
+            String textFieldMarkdown;
+            if (splitString.length == 1) textFieldMarkdown = splitString[0];
+            else textFieldMarkdown = splitString[1];
             //TODO: parse part of string thats for text fields into here
             //textFieldCommands = getTextFieldCommands();
         }
@@ -36,12 +47,12 @@ public class MarkdownLanguage {
         return commands;
     }
 
-    public ButtonCommands getButtonCommands(String message) {
+    public static ButtonCommands getButtonCommands(String message) {
         //TODO: parse button markdown into button commands
         return null;
     }
 
-    public TextFieldCommands getTextFieldCommands (String message) {
+    public static TextFieldCommands getTextFieldCommands (String message) {
         //TODO: parse text field markdown into text field commands
         return null;
     }
@@ -51,7 +62,7 @@ public class MarkdownLanguage {
      * @param commands both button and text field
      * @return markdown string of this command
      */
-    public String getMarkdown(Commands commands) {
+    public static String getMarkdown(Commands commands) {
         StringBuilder strbuilder = new StringBuilder();
         ArrayList<ButtonCommands.Button> buttonCommands = commands.getBCommands().buttonCommands;
         ArrayList<TextFieldCommands.TextField> textCommands = commands.getTCommands().textFieldCommands;
@@ -67,12 +78,11 @@ public class MarkdownLanguage {
      * @param buttonCommands the list of button commands
      * @return a string for this list
      */
-    private String getButtonMarkdown(ArrayList<ButtonCommands.Button> buttonCommands) {
+    private static String getButtonMarkdown(ArrayList<ButtonCommands.Button> buttonCommands) {
         StringBuilder strbuilder = new StringBuilder();
         strbuilder.append("bc");
-        strbuilder.append(parseChars[0]);
+        strbuilder.append(parseChars[3]);
         for (ButtonCommands.Button buttonCommand : buttonCommands) {
-            strbuilder.append(parseChars[0]);
             strbuilder.append(Integer.toString(buttonCommand.field));
             strbuilder.append(parseChars[0]);
             if (buttonCommand.mutualExclusion) {
@@ -89,6 +99,7 @@ public class MarkdownLanguage {
                 strbuilder.append("f");
                 strbuilder.append(parseChars[0]);
             }
+            strbuilder.append(parseChars[3]);
         }
         return strbuilder.toString();
     }
@@ -98,10 +109,10 @@ public class MarkdownLanguage {
      * @param textCommands the commands to parse
      * @return a string in the mark-down language
      */
-    private String getTextFieldMarkdown(ArrayList<TextFieldCommands.TextField> textCommands) {
+    private static String getTextFieldMarkdown(ArrayList<TextFieldCommands.TextField> textCommands) {
         StringBuilder strbuilder = new StringBuilder();
         strbuilder.append("tc");
-        strbuilder.append(parseChars[0]);
+        strbuilder.append(parseChars[3]);
         for (TextFieldCommands.TextField textCommand : textCommands) {
             strbuilder.append(parseChars[0]);
             strbuilder.append(textCommand.text);
@@ -126,6 +137,7 @@ public class MarkdownLanguage {
                 case Small -> strbuilder.append('s');
                 case Unspecified -> strbuilder.append('x');
             }
+            strbuilder.append(parseChars[3]);
         }
         return strbuilder.toString();
     }
@@ -153,6 +165,11 @@ public class MarkdownLanguage {
          * @return the text commands
          */
         public TextFieldCommands getTCommands() {return tCommands;}
+
+        @Override
+        public String toString() {
+            return MarkdownLanguage.getMarkdown(this);
+        }
 
     }
     public static class ButtonCommands {
@@ -264,34 +281,7 @@ public class MarkdownLanguage {
 
             // Information definitions
 
-            /**
-             * The different sizes
-             */
-            public enum Size {
-                Small,
-                Medium,
-                Large,
-                Unspecified;
-            }
 
-            /**
-             * The different fonts
-             */
-
-            public enum Font {
-                Normal,
-                Italic,
-                Bold,
-                Unspecified;
-            }
-
-            /**
-             * The different background colors
-             */
-            public enum BGColor {
-                White,
-                Unspecified;
-            }
 
             // the field # 0-9
             private int field;
