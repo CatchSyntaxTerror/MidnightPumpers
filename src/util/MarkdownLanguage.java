@@ -81,9 +81,8 @@ public class MarkdownLanguage {
     private static String getButtonMarkdown(ArrayList<ButtonCommands.Button> buttonCommands) {
         StringBuilder strbuilder = new StringBuilder();
         strbuilder.append("bc");
-        strbuilder.append(parseChars[0]);
+        strbuilder.append(parseChars[3]);
         for (ButtonCommands.Button buttonCommand : buttonCommands) {
-            strbuilder.append(parseChars[0]);
             strbuilder.append(Integer.toString(buttonCommand.field));
             strbuilder.append(parseChars[0]);
             if (buttonCommand.mutualExclusion) {
@@ -100,6 +99,7 @@ public class MarkdownLanguage {
                 strbuilder.append("f");
                 strbuilder.append(parseChars[0]);
             }
+            strbuilder.append(parseChars[3]);
         }
         return strbuilder.toString();
     }
@@ -112,7 +112,7 @@ public class MarkdownLanguage {
     private static String getTextFieldMarkdown(ArrayList<TextFieldCommands.TextField> textCommands) {
         StringBuilder strbuilder = new StringBuilder();
         strbuilder.append("tc");
-        strbuilder.append(parseChars[0]);
+        strbuilder.append(parseChars[3]);
         for (TextFieldCommands.TextField textCommand : textCommands) {
             strbuilder.append(parseChars[0]);
             strbuilder.append(textCommand.text);
@@ -137,6 +137,7 @@ public class MarkdownLanguage {
                 case Small -> strbuilder.append('s');
                 case Unspecified -> strbuilder.append('x');
             }
+            strbuilder.append(parseChars[3]);
         }
         return strbuilder.toString();
     }

@@ -2,13 +2,13 @@ package util;
 
 public class MarkdownConstants {
 
-    // Separate fields, separate command types, end command message
-    public static final char[] parseChars = new char[]{':', '*',';'};
+    // Separate fields, separate command types, end command message, separate command instances
+    public static final char[] parseChars = new char[]{':', '*',';','/'};
 
     /**
      * The different text field sizes
      */
-    public static enum Size {
+    public enum Size {
         Small,
         Medium,
         Large,
