@@ -1,8 +1,6 @@
 package UI;
 
-import components.Flowmeter;
-import components.Nuzzle;
-import components.Pump;
+import components.*;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -15,17 +13,37 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import sim.Gas;
 
 public class GasStation extends Application {
     private static final AnchorPane anchorPane = new AnchorPane();
 
+    //Calles all the constructors for the devices
     private Nuzzle nuzzle = new Nuzzle();
     private Flowmeter flowmeter = new Flowmeter();
     private Pump pump = new Pump();
+    private CCReader ccReader = new CCReader();
+    private CardCompany cardCompany = new CardCompany();
 
+    //Threads for the devices that need them
+    private Thread pumpThread = new Thread(pump);
+    private Thread flowMeterThread = new Thread(flowmeter);
+    private Thread cardCompanyThread = new Thread(cardCompany);
 
+    //Sim gas
+    private Gas gas = new Gas();
+
+    /*
+    Creates all devices and starts the threads for the devices that have them
+    Makes a gui to simulate the station
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        this.pump.setGas(gas);
+        this.flowmeter.setGas(gas);
+        this.pumpThread.start();
+        this.flowMeterThread.start();
+        this.cardCompanyThread.start();
         Group root = new Group();
         anchorPane.setPrefHeight(750);
         anchorPane.setPrefWidth(750);
@@ -36,6 +54,8 @@ public class GasStation extends Application {
         primaryStage.setTitle("Station");
         primaryStage.show();
     }
+
+    //Creates the Anchor pain
     private void makeAnchor() {
         double headX = 500;
         double heady = 360;
@@ -45,6 +65,7 @@ public class GasStation extends Application {
         double carSlotY = 550;
         double r = 10;
 
+        //Button that cause the hose to not be connected
         AnchorPane buttPlane = new AnchorPane();
         buttPlane.setPrefHeight(750);
         buttPlane.setPrefWidth(750);
@@ -52,7 +73,7 @@ public class GasStation extends Application {
 
         Rectangle screen = new Rectangle(515,400,100, 50);
         screen.setFill(Color.WHITE);
-        screen.setOnMouseClicked(event -> textFlow(this.flowmeter));
+        //screen.setOnMouseClicked(event -> textFlow(this.flowmeter));
         Text flowNum = new Text(525,430,"0000");
         flowNum.setFont(Font.font(35));
 
@@ -76,11 +97,17 @@ public class GasStation extends Application {
         Rectangle wheelBR = new Rectangle(255,550,50,50);
         wheelBR.setFill(Color.DARKGRAY);
 
-
+        //Button to connect hose to pump by clicking on the pump rect
         Rectangle pump = new Rectangle(500,340,130,300);
         pump.setFill(Color.GREY);
         pump.setOnMouseClicked(event -> hosetoPump(this.nuzzle,endX,endY));
 
+        //Button to give card input
+        Rectangle cardReader = new Rectangle(550,500,50,50);
+        cardReader.setFill(Color.PURPLE);
+        cardReader.setOnMouseClicked(event -> sendCard());
+
+        //Button to connect hose to car
         Rectangle car = new Rectangle(150,340,130,300);
         car.setFill(Color.RED);
         car.setOnMouseClicked(event -> hosetoCar(this.nuzzle,carSlotX,carSlotY));
@@ -110,6 +137,7 @@ public class GasStation extends Application {
         anchorPane.getChildren().add(backWindow);
         anchorPane.getChildren().add(carSlot);
         anchorPane.getChildren().add(pump);
+        anchorPane.getChildren().add(cardReader);
         anchorPane.getChildren().add(screen);
         anchorPane.getChildren().add(flowNum);
         anchorPane.getChildren().add(hose);
@@ -118,6 +146,13 @@ public class GasStation extends Application {
         anchorPane.getChildren().add(cirHead);
     }
 
+    //TODO might need more functionality to prevent card reader from reading
+    // when a card is not asked for
+    private void sendCard() {
+        this.ccReader.sendCard();
+    }
+
+    //Is a throw away function to test if I could change the text for pump
     private void textFlow(Flowmeter flowmeter) {
         for(int i = 0; i< 20;i++){
             flowmeter.checkingFlow();

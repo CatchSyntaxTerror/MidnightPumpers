@@ -33,7 +33,7 @@ public class Main {
     private static Map<UUID, IOPortServer> initializeServers(){
         PUMP = new Actuator(PortAddresses.PUMP_PORT);
         SCREEN = new CommunicatorServer(PortAddresses.SCREEN_PORT);
-        CARD_COMPANY = new CommunicatorServer(PortAddresses.CARD_COMPANY_PORT);
+        CARD_COMPANY =new CommunicatorServer(PortAddresses.CARD_COMPANY_PORT);
         GAS_STATION = new CommunicatorServer(PortAddresses.GAS_STATION_PORT);
         Map<UUID,IOPortServer> ioPortServers = new HashMap<>();
         ioPortServers.put(PUMP.SERVER_UUID, PUMP);

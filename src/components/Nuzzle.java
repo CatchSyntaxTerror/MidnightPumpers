@@ -25,21 +25,37 @@ public class Nuzzle {
         pumpThread.start();
     }
 
+    /*
+    //TODO : send proper message for actuator
+    The hose is not connected
+     */
     public void setNotCon(){
         this.conPump = false;
         this.conCar = false;
         this.line.setStroke(Color.RED);
+        //this.actuator.send("");
     }
+
+    /*
+    //TODO : send proper message for actuator
+    The hose is connected to car
+     */
     public void setConCar() {
         this.conCar = true;
         this.conPump = false;
         this.line.setStroke(Color.GREEN);
+        //this.actuator.send("");
     }
 
+    /*
+    //TODO : send proper message for actuator
+    The hose is connected to pump
+     */
     public void setConPump() {
         this.conPump = true;
         this.conCar = false;
         this.line.setStroke(Color.GREENYELLOW);
+        //this.actuator.send("");
     }
 
     public void setLine(Line line) {

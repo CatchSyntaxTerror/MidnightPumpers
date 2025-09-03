@@ -7,6 +7,10 @@ public class Gas {
         this.onOff = false;
     }
 
+    public boolean isOnOff() {
+        return onOff;
+    }
+
     public void turnOnGas(){
         this.onOff = true;
     }
