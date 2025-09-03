@@ -33,11 +33,11 @@ public class ScreenUI extends Application {
     private final String WHITE_BACKGROUND =
             "-fx-background-color: #FFFFFF;";
     private final String SELECTED_BTN   =
-            "-fx-background-color: #F3DD00, #F3DD00;";
+            "-fx-background-color: #000000, #F3DD00; -fx-background-insets: 0px, 3px;";
     private final String UNSELECTED_BTN =
             "-fx-background-color: #F3DD00, #000000; -fx-background-insets: 0px, 3px;";
     private final String RESPONSIVE_BTN =
-            "-fx-background-color: #000961, #E5E8FF; -fx-background-insets: 0px, 4px;";
+            "-fx-background-color: #FFD2B2, #000000; -fx-background-insets: 0px, 4px;";
     private final String ITALIC = "-fx-font-style: italic;";
     private final String BOLD   = "-fx-font-weight: bold;";
 
@@ -105,7 +105,7 @@ public class ScreenUI extends Application {
      */
     public void setBlank() {
         clearGP();
-        GRID_PANE.setStyle(BLACK_SCRN);
+        GRID_PANE.setStyle(WHITE_BACKGROUND);
     }
 
     /**
@@ -170,7 +170,6 @@ public class ScreenUI extends Application {
      * This method is for testing purposes
      */
     private void createTextBoxes() {
-        //TODO: text box creation
         for (int i = 0; i < 10; i += 2) {
             int[] spanning = {i, i+1};
             createLbl(spanning, 0, 0, 0, spanning[0] + "" + spanning[1]);
@@ -285,7 +284,7 @@ public class ScreenUI extends Application {
                 // Regular font
         }
         switch (backColor) {
-            case 1:
+            case 0:
                 // Grey
                 lbl.setStyle(WHITE_BACKGROUND);
             case 2:
