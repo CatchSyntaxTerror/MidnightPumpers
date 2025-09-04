@@ -17,7 +17,7 @@ import static util.PortAddresses.SCREEN_PORT;
  */
 //TODO:
 // - Connect to IO Port
-public class Screen {
+public class Screen implements Runnable{
     // Constants
     private final String REGEX_0 = ":"; // split messages by the ':' character
     private final String REGEX_1 = "-"; // split messages by the '-' character
@@ -29,12 +29,27 @@ public class Screen {
 
     // Screen has a Communicator type IO Port (client or server?)
     //TODO: IOPort
-//    private final CommunicatorClient communicator = new CommunicatorClient(SCREEN_PORT);
-//    private final CommunicatorServer communicator = new CommunicatorServer(SCREEN_PORT);
-
-
+    private final CommunicatorClient communicator = new CommunicatorClient(SCREEN_PORT);
     // The gui
     private ScreenUI screenUI = null;
+
+    /**
+     * Make this Screen
+     */
+    public Screen() {
+        Thread thread = new Thread(communicator);
+        thread.start();
+    }
+    /**
+     * Runs this operation.
+     */
+    @Override
+    public void run() {
+        while (this.communicator.ON){
+            String message = this.communicator.get().toString();
+            setScreen(message);
+        }
+    }
 
     /**
      * A screen UI setter
@@ -337,6 +352,9 @@ public class Screen {
             return;
         }
         //TODO: implement Communicator IO Port
+        if(screenUI != null) {
+            screenUI.setBlank();
+        }
         System.out.println(btnString(pressedBtn));
 //        communicator.send(btnString(pressedBtn));
     }
@@ -365,4 +383,6 @@ public class Screen {
             return pressedBtn + ":" + val;
         }
     }
+
+
 }
