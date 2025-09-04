@@ -100,7 +100,11 @@ public class MarkdownLanguage {
 
         return bCommands;
     }
-
+    /**
+     * Method for getting text field commands from markdown string
+     * @param message markdown string
+     * @return text field commands
+     */
     public static TextFieldCommands getTextFieldCommands (String message) {
         if (!message.substring(0,3).equals("tc/")) return null;
         String next = message.substring(3);
