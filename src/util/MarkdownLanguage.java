@@ -11,6 +11,13 @@ import static util.MarkdownConstants.BGColor;
 
 public class MarkdownLanguage {
 
+    //TODO: Shift two digit fields by 10
+
+    /**
+     * Gets a commands object from a markdown string
+     * @param message the markdown string
+     * @return a commands object to be interpreted by the GUI
+     */
     public static Commands getCommands(String message) {
         if (message.length() <= 2) return null;
         enum commandType {
@@ -34,7 +41,6 @@ public class MarkdownLanguage {
 
         if (messageType == commandType.Button) {
             String buttonMarkdown = splitString[0];
-            System.out.println(buttonMarkdown);
             buttonCommands = getButtonCommands(buttonMarkdown);
             if (splitString.length > 1) {
                 messageType = commandType.TextField;
@@ -51,8 +57,12 @@ public class MarkdownLanguage {
         return commands;
     }
 
+    /**
+     * Gets button commands from a markdown string
+     * @param message the markdown string
+     * @return the button commands
+     */
     public static ButtonCommands getButtonCommands(String message) {
-        //TODO: parse button markdown into button commands
         if (!message.substring(0,3).equals("bc/")) return null;
         String next = message.substring(3);
         ButtonCommands bCommands = new ButtonCommands();
@@ -63,9 +73,7 @@ public class MarkdownLanguage {
             String regex = "" + parseChars[0];
             String commandRegex = "" + parseChars[3];
             String []parsedCommand = next.split(regex);
-            for (int i = 0; i < 3;i++) {
-                System.out.println(parsedCommand[i]);
-            }
+
             if (parsedCommand.length < 3) return null;
             String nextInt = next.split(regex)[0];
             int field;
@@ -88,15 +96,69 @@ public class MarkdownLanguage {
                 newNext = newNext + parsedNext[i] + parseChars[3];
             }
             next = newNext;
-            System.out.println(next);
         } while(bCommands.getButtonCommands().size() < 10);
 
         return bCommands;
     }
 
     public static TextFieldCommands getTextFieldCommands (String message) {
-        //TODO: parse text field markdown into text field commands
-        return null;
+        if (!message.substring(0,3).equals("tc/")) return null;
+        String next = message.substring(3);
+        TextFieldCommands tCommands = new TextFieldCommands();
+
+        do {
+            if (next.charAt(0) == parseChars[2] || next.isEmpty()) {
+                return tCommands;
+            }
+            String regex = "" + parseChars[0];
+            String commandRegex = "" + parseChars[3];
+            String []parsedCommand = next.split(regex);
+
+            if (parsedCommand.length < 5) return null;
+            String text = parsedCommand[0];
+            String nextInt = parsedCommand[1];
+            int field;
+            try {
+                field = Integer.parseInt(nextInt);
+            } catch (NumberFormatException e) {
+                return null;
+                //Invalid format
+            }
+            MarkdownConstants.BGColor col;
+            switch (parsedCommand[2]) {
+                case "w" -> col = BGColor.White;
+                default -> col = BGColor.Unspecified;
+            }
+            MarkdownConstants.Font font;
+            switch(parsedCommand[3]) {
+                case "b" -> font = Font.Bold;
+                case "n" -> font = Font.Normal;
+                case "i" -> font = Font.Italic;
+                default -> font = Font.Unspecified;
+            }
+            MarkdownConstants.Size size;
+            switch (parsedCommand[4]) {
+                case "l" -> size = Size.Large;
+                case "m" -> size = Size.Medium;
+                case "s" -> size = Size.Small;
+                default -> size = Size.Unspecified;
+            }
+            TextFieldCommands.TextField textCommand = new TextFieldCommands.TextField(
+                    text,
+                    field,
+                    size,
+                    font,
+                    col
+            );
+            tCommands.addFieldCommand(textCommand);
+            String newNext = "";
+            String[] parsedNext = next.split(commandRegex);
+            for (int i = 1; i < parsedNext.length; i++) {
+                newNext = newNext + parsedNext[i] + parseChars[3];
+            }
+            next = newNext;
+        } while(tCommands.getTextFieldCommands().size() < 10);
+        return tCommands;
     }
 
     /**
@@ -156,7 +218,6 @@ public class MarkdownLanguage {
         strbuilder.append("tc");
         strbuilder.append(parseChars[3]);
         for (TextFieldCommands.TextField textCommand : textCommands) {
-            strbuilder.append(parseChars[0]);
             strbuilder.append(textCommand.text);
             strbuilder.append(parseChars[0]);
             strbuilder.append(Integer.toString(textCommand.field));
@@ -179,6 +240,7 @@ public class MarkdownLanguage {
                 case Small -> strbuilder.append('s');
                 case Unspecified -> strbuilder.append('x');
             }
+            strbuilder.append(parseChars[0]);
             strbuilder.append(parseChars[3]);
         }
         return strbuilder.toString();

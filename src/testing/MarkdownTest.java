@@ -11,7 +11,8 @@ public class MarkdownTest {
 
         System.out.println(exMarkdown);
 
-        MarkdownLanguage.getCommands(exMarkdown);
+        MarkdownLanguage.Commands commandsFromMarkdown = MarkdownLanguage.getCommands(exMarkdown);
+        System.out.println(commandsFromMarkdown);
     }
 
     /**
