@@ -10,6 +10,9 @@ public class MarkdownTest {
         String sameExample = MarkdownLanguage.getMarkdown(exCommands);
 
         System.out.println(exMarkdown);
+
+        MarkdownLanguage.Commands commandsFromMarkdown = MarkdownLanguage.getCommands(exMarkdown);
+        System.out.println(commandsFromMarkdown);
     }
 
     /**
