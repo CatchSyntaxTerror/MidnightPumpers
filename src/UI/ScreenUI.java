@@ -11,6 +11,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import util.MarkdownLanguage;
 
 
 /**
@@ -252,10 +253,6 @@ public class ScreenUI extends Application {
     public void createLbl(int[] txtFields, int fontSize, int fontType,
                             int backColor, String str) {
         //TODO make this an object rather than a bunch of primitive types
-        for (int i:
-             txtFields) {
-            System.out.println(i);
-        }
         Label lbl = createLbl(txtFields);
         lbl.setText(str);
         switch (fontSize) {
@@ -424,6 +421,10 @@ public class ScreenUI extends Application {
         primaryStage.show();
 
         scr.setScreen("t4-s0-f0-c0-text label one:t5-my next text box:t01-this field:b4m:b5m:b9x");
+        scr.setScreen("t01-Remove Nozzle and Select Fuel Grade:t2-$2.85:t3-$2.90:t4-$2.95:t5-$3.00:t8-Cancel:t9-Confirm:b2m:b3m:b4m:b5m:b8x:b9x");
+//        MarkdownLanguage.ButtonCommands bCs = new MarkdownLanguage.ButtonCommands();
+//        MarkdownLanguage.TextFieldCommands tCs = new MarkdownLanguage.TextFieldCommands();
+//        scr.setScreen(new MarkdownLanguage.Commands(bCs, tCs));
     }
 }
 
