@@ -1,5 +1,6 @@
 package UI;
 
+import IOPort.CommunicatorClient;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -7,10 +8,19 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import util.PortAddresses;
 
 import java.awt.*;
 
 public class GasStationGUI extends Application {
+
+    private CommunicatorClient communicatorClient;
+    public GasStationGUI(){
+        this.communicatorClient = new CommunicatorClient(PortAddresses.GAS_STATION_PORT);
+        Thread thread = new Thread(this.communicatorClient);
+        thread.start();
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("GasStation");
@@ -42,4 +52,21 @@ public class GasStationGUI extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    /**
+     * TODO: implement with componentMessage object
+     * @param message
+     */
+
+    public void sendMessage(String message){
+        communicatorClient.send(message);
+    }
+    public Object get(){
+        return communicatorClient.get();
+    }
+
+
+
+
+
 }
