@@ -20,7 +20,7 @@ public abstract class IOPortServer {
     protected BlockingQueue<String> INBOX;
     public BufferedReader LISTENER;
     public PrintWriter WRITER;
-    public boolean ON;
+    public volatile boolean ON;
     public UUID SERVER_UUID;
     public boolean notConnected = true;
 
