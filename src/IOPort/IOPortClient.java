@@ -16,7 +16,7 @@ public abstract class IOPortClient {
     protected BlockingQueue<String> INBOX;
     public BufferedReader LISTENER;
     public PrintWriter WRITER;
-    public boolean ON;
+    public volatile boolean ON;
     public UUID CLIENT_UUID;
     public boolean notConnected = true;
 
