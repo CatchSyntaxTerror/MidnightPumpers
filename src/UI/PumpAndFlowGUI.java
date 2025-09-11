@@ -31,10 +31,14 @@ public class PumpAndFlowGUI extends Application {
     private Pump pump;
     private Gas gas = new Gas();
     private FuelTank fuelTank;
-    Timeline timeline;
+
+    private Timeline timeline;
+    //this is how long it takes to fill, the rate can be changed, this is just the
+    // default
+    final double durration =20;
     @Override
     public void start(Stage primaryStage) throws Exception {
-        fuelTank = new FuelTank(150, 200, 100, 50);
+        fuelTank = new FuelTank(150, 200, 100, 50,0);
         fuelTank.getTankPane().setBackground(Background.fill(Color.BLACK));
         //fuelTank.getTankPane().setLayoutX(1000);
         HBox fuelroot = new HBox(50, fuelTank.getTankPane());
@@ -44,7 +48,7 @@ public class PumpAndFlowGUI extends Application {
         timeline = new Timeline(
                 new javafx.animation.KeyFrame(javafx.util.Duration.seconds(0),
                         new javafx.animation.KeyValue(fuelTank.fuelLevelProperty(), 0)),
-                new javafx.animation.KeyFrame(javafx.util.Duration.seconds(10),
+                new javafx.animation.KeyFrame(javafx.util.Duration.seconds(durration),
                         new javafx.animation.KeyValue(fuelTank.fuelLevelProperty(), 100))
         );
         timeline.setAutoReverse(true);
@@ -202,14 +206,26 @@ public class PumpAndFlowGUI extends Application {
 
     }
 
+    /**
+     * This changes the rate of how the tank is filled
+     * @param value the new pace the fuel is se at, default is .5
+     */
+    private void changeRate(double value){
+        timeline.setRate(value);
+    }
+
+    /**
+     * So this class creates the pane and controls the look of the animation
+     */
     class FuelTank {
         private final Pane tankPane;
         private final Rectangle tankBody;
         private final Rectangle fuel;
-        private final DoubleProperty fuelLevel = new SimpleDoubleProperty(0);
+        private final DoubleProperty fuelLevel;
         // 0-100 so we can change this if the thing tells us the percent
 
-        public FuelTank(double width, double height, double arc, double yOffset) {
+        public FuelTank(double width, double height, double arc, double yOffset,int initialValue) {
+            fuelLevel = new SimpleDoubleProperty(0);
             tankPane = new Pane();
             tankPane.setBackground(Background.fill(Color.BLACK));
 
