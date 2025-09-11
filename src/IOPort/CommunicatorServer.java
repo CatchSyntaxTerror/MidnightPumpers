@@ -47,12 +47,7 @@ public class CommunicatorServer extends IOPortServer implements Runnable {
      */
     @Override
     public Object get() {
-        try {
-            return INBOX.take();
-        } catch (InterruptedException e) {
-            System.out.println("Could not take -Communicator Server");
-            return null;
-        }
+        return INBOX.poll();
     }
 
     /**

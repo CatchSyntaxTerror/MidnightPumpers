@@ -73,10 +73,11 @@ public class Flowmeter implements Runnable {
     public void run() {
         int i = 0;
         while(this.communicatorServer.ON) {
-//            String message = this.communicatorServer.get().toString();
-//            if(message.equals("SOMETHING THAT MEANS RESET")){
-//                gasFlow = 0;
-//            }
+
+            if(communicatorServer.get() != null) {
+                gasFlow = 0;
+            }
+
             if (gas.isOnOff()) {
                 gasFlow += 0.02;
                 updatedText();
