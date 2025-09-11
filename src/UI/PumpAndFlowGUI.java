@@ -2,17 +2,23 @@ package UI;
 
 import components.Flowmeter;
 import components.Pump;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -24,8 +30,30 @@ public class PumpAndFlowGUI extends Application {
     private Flowmeter flowmeter;
     private Pump pump;
     private Gas gas = new Gas();
+    private FuelTank fuelTank;
+    Timeline timeline;
     @Override
     public void start(Stage primaryStage) throws Exception {
+        fuelTank = new FuelTank(150, 200, 100, 50);
+        fuelTank.getTankPane().setBackground(Background.fill(Color.BLACK));
+        //fuelTank.getTankPane().setLayoutX(1000);
+        HBox fuelroot = new HBox(50, fuelTank.getTankPane());
+        fuelroot.setPadding(new Insets(20));
+        fuelroot.setBackground(Background.fill(Color.BLACK));
+
+        timeline = new Timeline(
+                new javafx.animation.KeyFrame(javafx.util.Duration.seconds(0),
+                        new javafx.animation.KeyValue(fuelTank.fuelLevelProperty(), 0)),
+                new javafx.animation.KeyFrame(javafx.util.Duration.seconds(10),
+                        new javafx.animation.KeyValue(fuelTank.fuelLevelProperty(), 100))
+        );
+        timeline.setAutoReverse(true);
+        timeline.setCycleCount(1);
+
+
+
+
+
         flowmeter = new Flowmeter();
         pump = new Pump();
         flowmeter.setGas(gas);
@@ -34,8 +62,15 @@ public class PumpAndFlowGUI extends Application {
         anchorPane.setPrefHeight(750);
         anchorPane.setPrefWidth(1000);
         anchorPane.setBackground(Background.fill(Color.BLACK));
+        fuelroot.setBackground(Background.fill(Color.BLACK));
         makeAnchor();
+
         root.getChildren().add(anchorPane);
+        root.getChildren().add(fuelroot);
+        //fuelroot.setAlignment(Pos.CENTER);
+        fuelroot.setLayoutX(700);
+
+
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("PumpFlow");
         primaryStage.show();
@@ -145,11 +180,13 @@ public class PumpAndFlowGUI extends Application {
         pump.turnOn();
         System.out.println(gas.isOnOff());
         System.out.println("on");
+        timeline.play();
     }
     private void turnOF(){
         pump.turnOf();
         System.out.println(gas.isOnOff());
         System.out.println("off");
+        timeline.stop();
     }
     private void startThread(Circle butt){
         if(flowmeter.connected()) {
@@ -163,5 +200,78 @@ public class PumpAndFlowGUI extends Application {
     }
     private void nothing(){
 
+    }
+
+    class FuelTank {
+        private final Pane tankPane;
+        private final Rectangle tankBody;
+        private final Rectangle fuel;
+        private final DoubleProperty fuelLevel = new SimpleDoubleProperty(0);
+        // 0-100 so we can change this if the thing tells us the percent
+
+        public FuelTank(double width, double height, double arc, double yOffset) {
+            tankPane = new Pane();
+            tankPane.setBackground(Background.fill(Color.BLACK));
+
+            tankBody = new Rectangle(width, height);
+            tankBody.setArcWidth(arc);
+            tankBody.setArcHeight(arc);
+            tankBody.setFill(Color.RED);
+            tankBody.setStroke(Color.MAROON);
+            tankBody.setStrokeWidth(4);
+            tankBody.setStrokeType(StrokeType.INSIDE);
+            tankBody.setY(yOffset);
+            fuel = new Rectangle(width - 8, height - 8);
+            fuel.setX(4);
+            fuel.setY(yOffset + height - 4 - (height - 8));
+            fuel.setArcWidth(arc);
+            fuel.setArcHeight(arc);
+            fuel.setFill(new LinearGradient(
+                    0, 0, 0, 1, true, javafx.scene.paint.CycleMethod.NO_CYCLE,
+                    new Stop(0, new Color(.81, .42, .04, 1)), new Stop(1, new Color(.158, .79, .08, 1)))
+            );
+            Rectangle emptyPart = new Rectangle(width - 8, height - 8);
+            emptyPart.setX(4);
+            emptyPart.setY(yOffset + 4);
+            emptyPart.setArcWidth(arc);
+            emptyPart.setArcHeight(arc);
+            fuel.setClip(emptyPart);
+
+            fuel.heightProperty().bind(fuelLevel.divide(100).multiply(height - 8));
+            fuel.yProperty().bind(tankBody.yProperty()
+                    .add(tankBody.heightProperty())
+                    .subtract(fuel.heightProperty())
+                    .subtract(4));
+
+
+            Circle cap = new Circle(width / 2, yOffset + 4, 15);
+            cap.setFill(Color.MAROON);
+            cap.setStroke(Color.BLACK);
+
+
+            QuadCurve hose = new QuadCurve();
+            hose.setStartX(width / 2);
+            hose.setStartY(yOffset + 4);
+            hose.setControlX(width / 2 - 60);
+            hose.setControlY(yOffset - 80);
+            hose.setEndX(width / 2 - 30);
+            hose.setEndY(yOffset - 30);
+            hose.setStroke(Color.valueOf("CDCB1AFF"));
+            hose.setStrokeWidth(10);
+            hose.setFill(null);
+
+            Circle nozzle = new Circle(hose.getEndX(), hose.getEndY(), 7);
+            nozzle.setFill(Color.valueOf("CDCB1AFF"));
+            nozzle.setStroke(Color.valueOf("CDCB1AFF"));
+            tankPane.getChildren().addAll(hose, tankBody, fuel, cap, nozzle);
+        }
+
+        public DoubleProperty fuelLevelProperty() {
+            return fuelLevel;
+        }
+
+        public Pane getTankPane() {
+            return tankPane;
+        }
     }
 }
