@@ -1,7 +1,6 @@
 package components;
 
-import IOPort.CommunicatorClient;
-import IOPort.CommunicatorServer;
+import oldShitGarbage.Shit1;
 import UI.ButtonType;
 import UI.ScreenUI;
 import util.MarkdownConstants;
@@ -29,7 +28,7 @@ public class Screen implements Runnable{
 
     // Screen has a Communicator type IO Port (client or server?)
     //TODO: IOPort
-    private final CommunicatorClient communicator = new CommunicatorClient(SCREEN_PORT);
+    private final Shit1 communicator = new Shit1(SCREEN_PORT);
     // The gui
     private ScreenUI screenUI = null;
 

@@ -1,6 +1,4 @@
-package IOPort;
-
-import util.PortAddresses;
+package oldShitGarbage;
 
 import java.util.*;
 
@@ -9,14 +7,14 @@ import java.util.*;
  * Allows other classes to call send(), get(), read() on server/client IOPorts
  * Author: Danny Phantom, Natalie Onion, Youssef Amin
  */
-public class Server {
-    private IOPortClient nozzle;
-    private IOPortClient flowMeter;
-    private IOPortServer pump;
-    private Map<UUID, IOPortServer> serverMap;
-    private Map<UUID, IOPortClient> clientMap;
+public class Shit4 {
+    private Shit5 nozzle;
+    private Shit5 flowMeter;
+    private Shit3 pump;
+    private Map<UUID, Shit3> serverMap;
+    private Map<UUID, Shit5> clientMap;
 
-    public Server(Map<UUID, IOPortServer> serverMap, Map<UUID, IOPortClient> clientMap) {
+    public Shit4(Map<UUID, Shit3> serverMap, Map<UUID, Shit5> clientMap) {
         this.serverMap = serverMap;
         this.clientMap = clientMap;
     }
@@ -27,7 +25,7 @@ public class Server {
      * @param ID UUID of Server that sends the message
      */
     public void send(String message, UUID ID) {
-        IOPortServer server = serverMap.get(ID);
+        Shit3 server = serverMap.get(ID);
         if (server != null) {
             server.send(message);
         } else {
@@ -43,7 +41,7 @@ public class Server {
      * @return Message
      */
     public Object get(UUID ID) {
-        IOPortServer server = serverMap.get(ID);
+        Shit3 server = serverMap.get(ID);
         if (server != null) {
             return server.get();
         } else {
@@ -58,7 +56,7 @@ public class Server {
      * @return Message
      */
     public Object read(UUID ID) {
-        IOPortServer server = serverMap.get(ID);
+        Shit3 server = serverMap.get(ID);
         if (server != null) {
             return server.read();
         } else {
@@ -70,10 +68,10 @@ public class Server {
         boolean clientDone = true;
         boolean serverDone = true;
 
-        for (IOPortClient client : clientMap.values()){
+        for (Shit5 client : clientMap.values()){
             clientDone = clientDone && !client.notConnected;
         }
-        for (IOPortServer server : serverMap.values()){
+        for (Shit3 server : serverMap.values()){
             serverDone = serverDone && !server.notConnected;
         }
         return clientDone && serverDone;
@@ -83,20 +81,20 @@ public class Server {
      * Starts each server/client thread
      */
     public void startUp() {
-        for (IOPortServer server : serverMap.values()) {
-            if (server instanceof Actuator actuator) {
+        for (Shit3 server : serverMap.values()) {
+            if (server instanceof Shit actuator) {
                 Thread thread = new Thread(actuator);
                 thread.start();
-            } else if (server instanceof CommunicatorServer comSer) {
+            } else if (server instanceof Shit6 comSer) {
                 Thread thread = new Thread(comSer);
                 thread.start();
             }
         }
-        for (IOPortClient client : clientMap.values()) {
-            if (client instanceof Status status) {
+        for (Shit5 client : clientMap.values()) {
+            if (client instanceof Shit2 status) {
                 Thread thread = new Thread(status);
                 thread.start();
-            } else if (client instanceof CommunicatorClient comCli) {
+            } else if (client instanceof Shit1 comCli) {
                 Thread thread = new Thread(comCli);
                 thread.start();
             }

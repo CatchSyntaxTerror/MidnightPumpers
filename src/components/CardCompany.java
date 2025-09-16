@@ -1,6 +1,6 @@
 package components;
 
-import IOPort.CommunicatorClient;
+import oldShitGarbage.Shit1;
 import util.PortAddresses;
 /**
  * This class is used to simulate the card company. It recieves card reader
@@ -9,12 +9,12 @@ import util.PortAddresses;
  */
 
 public class CardCompany implements Runnable {
-    private CommunicatorClient communicatorClient;
+    private Shit1 communicatorClient;
     private boolean accept;
     public CardCompany(){
         this.accept = true;
         this.communicatorClient =
-                new CommunicatorClient(PortAddresses.CARD_COMPANY_PORT);
+                new Shit1(PortAddresses.CARD_COMPANY_PORT);
         Thread thread = new Thread(communicatorClient);
         thread.start();
     }

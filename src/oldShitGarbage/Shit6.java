@@ -1,34 +1,34 @@
-package IOPort;
+package oldShitGarbage;
 
 import java.io.*;
-import java.net.Socket;
+import java.net.ServerSocket;
 import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * The client side of the Communicator. For JavaFX
+ * Communicator class is an instance of both
  * Author: Youssef Amin, Natalie Onion, Daniel Thompson
  */
-public class CommunicatorClient extends IOPortClient implements Runnable {
+public class Shit6 extends Shit3 implements Runnable {
 
-    public CommunicatorClient(int port) {
+    public Shit6(int port) {
         super(port);
-        CLIENT_UUID = UUID.randomUUID();
+        SERVER_UUID = UUID.randomUUID();
         INBOX = new LinkedBlockingQueue<>();
     }
 
     /**
-     * closes sockets gracefully
+     * closes client socket and then server socket
      */
     @Override
     public void close() {
         try {
             CLIENT_SOCKET.close();
+            SERVER_SOCKET.close();
             System.out.println("Server closed");
             ON = false;
         } catch (IOException e) {
-            System.out.println("Could not close client socket");
-            throw new RuntimeException(e);
+            System.out.println("Could not close client/server socket");
         }
     }
 
@@ -47,11 +47,7 @@ public class CommunicatorClient extends IOPortClient implements Runnable {
      */
     @Override
     public Object get() {
-        try {
-            return INBOX.take();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        return INBOX.poll();
     }
 
     /**
@@ -80,10 +76,11 @@ public class CommunicatorClient extends IOPortClient implements Runnable {
      */
     @Override
     public void run() {
-        while (notConnected){
+        while(notConnected){
             try {
                 System.out.println("Trying " + PORT);
-                connect(0);
+                SERVER_SOCKET = new ServerSocket(PORT);
+                CLIENT_SOCKET = SERVER_SOCKET.accept();
                 LISTENER = new BufferedReader(new InputStreamReader(CLIENT_SOCKET.getInputStream()));
                 WRITER = new PrintWriter(CLIENT_SOCKET.getOutputStream(), true);
                 System.out.println("Server listening on port " + PORT);
@@ -98,11 +95,8 @@ public class CommunicatorClient extends IOPortClient implements Runnable {
             }
         }
         ON = true;
-        while (ON) {
+        while (ON ) {
             receive();
         }
     }
-
-
-
 }

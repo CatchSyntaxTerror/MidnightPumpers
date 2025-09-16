@@ -1,6 +1,6 @@
 package UI;
 
-import IOPort.CommunicatorClient;
+import oldShitGarbage.Shit1;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,13 +10,11 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import util.PortAddresses;
 
-import java.awt.*;
-
 public class GasStationGUI extends Application {
 
-    private CommunicatorClient communicatorClient;
+    private Shit1 communicatorClient;
     public GasStationGUI(){
-        this.communicatorClient = new CommunicatorClient(PortAddresses.GAS_STATION_PORT);
+        this.communicatorClient = new Shit1(PortAddresses.GAS_STATION_PORT);
         Thread thread = new Thread(this.communicatorClient);
         thread.start();
     }

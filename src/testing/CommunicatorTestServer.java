@@ -1,6 +1,6 @@
 package testing;
 
-import IOPort.CommunicatorServer;
+import oldShitGarbage.Shit6;
 import util.PortAddresses;
 
 /**
@@ -8,7 +8,7 @@ import util.PortAddresses;
  */
 public class CommunicatorTestServer {
     public static void main(String[] args) throws InterruptedException {
-        CommunicatorServer pump = new CommunicatorServer(PortAddresses.PUMP_PORT);
+        Shit6 pump = new Shit6(PortAddresses.PUMP_PORT);
         Thread pumpThread = new Thread(pump);
         pumpThread.start();
         pump.send("I like pizza");

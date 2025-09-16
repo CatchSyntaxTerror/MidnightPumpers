@@ -2,7 +2,7 @@ package components;
 
 import javafx.scene.shape.Rectangle;
 import sim.Gas;
-import IOPort.*;
+import oldShitGarbage.*;
 import util.*;
 
 /**
@@ -13,9 +13,9 @@ import util.*;
 public class Pump implements Runnable {
     private Rectangle rectangle;
     private Gas gas;
-    private Status status;
+    private Shit2 status;
     public Pump(){
-        this.status = new Status(PortAddresses.PUMP_PORT);
+        this.status = new Shit2(PortAddresses.PUMP_PORT);
         this.gas = null;
         this.rectangle = null;
         Thread pumpT = new Thread(this.status);

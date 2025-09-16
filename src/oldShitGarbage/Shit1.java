@@ -1,21 +1,16 @@
-package IOPort;
+package oldShitGarbage;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.io.*;
 import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Not totally sure if this is right
- * Status does not send messages only receives and executes
+ * The client side of the Communicator. For JavaFX
  * Author: Youssef Amin, Natalie Onion, Daniel Thompson
  */
-public class Status extends IOPortClient implements Runnable {
+public class Shit1 extends Shit5 implements Runnable {
 
-    public Status(int port) {
+    public Shit1(int port) {
         super(port);
         CLIENT_UUID = UUID.randomUUID();
         INBOX = new LinkedBlockingQueue<>();
@@ -28,7 +23,7 @@ public class Status extends IOPortClient implements Runnable {
     public void close() {
         try {
             CLIENT_SOCKET.close();
-            System.out.println("Client socket closed");
+            System.out.println("Server closed");
             ON = false;
         } catch (IOException e) {
             System.out.println("Could not close client socket");
@@ -37,14 +32,13 @@ public class Status extends IOPortClient implements Runnable {
     }
 
     /**
-     * Not used
+     * Send messages to client
      *
-     * @param message dont matter, not used.
+     * @param message String for client
      */
     @Override
     public void send(String message) {
-        System.out.println("YOU SHOULDN'T USE THIS!!!");
-        throw new UnsupportedOperationException();
+        WRITER.println(message);
     }
 
     /**
@@ -75,7 +69,7 @@ public class Status extends IOPortClient implements Runnable {
         try {
             INBOX.add(LISTENER.readLine());
         } catch (IOException e) {
-            System.out.println("Could not receive message.");
+            System.out.println("Closing server");
             close();
         }
     }
@@ -92,7 +86,7 @@ public class Status extends IOPortClient implements Runnable {
                 LISTENER = new BufferedReader(new InputStreamReader(CLIENT_SOCKET.getInputStream()));
                 WRITER = new PrintWriter(CLIENT_SOCKET.getOutputStream(), true);
                 System.out.println("Server listening on port " + PORT);
-                 notConnected = false;
+                notConnected = false;
             } catch (Exception e) {
                 System.out.println("Could not start server on port " + PORT);
             }
@@ -107,4 +101,7 @@ public class Status extends IOPortClient implements Runnable {
             receive();
         }
     }
+
+
+
 }

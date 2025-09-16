@@ -1,6 +1,6 @@
 package components;
 
-import IOPort.Actuator;
+import oldShitGarbage.Shit;
 import util.PortAddresses;
 
 /**
@@ -9,9 +9,9 @@ import util.PortAddresses;
  * Author: Danny Thompson
  */
 public class CCReader {
-    private Actuator actuator;
+    private Shit actuator;
     public CCReader(){
-        this.actuator = new Actuator(PortAddresses.CARD_READER_PORT);
+        this.actuator = new Shit(PortAddresses.CARD_READER_PORT);
         Thread thread = new Thread(this.actuator);
         thread.start();
     }

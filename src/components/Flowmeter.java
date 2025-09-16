@@ -4,7 +4,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import sim.Gas;
-import IOPort.*;
+import oldShitGarbage.*;
 import util.*;
 
 /**
@@ -16,7 +16,7 @@ public class Flowmeter implements Runnable {
     private Text text;
     private Gas gas;
     private double gasFlow;
-    private CommunicatorServer communicatorServer;
+    private Shit6 communicatorServer;
     private Thread flowThread;
     private Rotate rotate1;
     private Rotate rotate2;
@@ -24,7 +24,7 @@ public class Flowmeter implements Runnable {
     private double startR1 = 45;
     private double startR2 = 135;
     public Flowmeter(){
-        this.communicatorServer = new CommunicatorServer(PortAddresses.FLOW_METER_PORT);
+        this.communicatorServer = new Shit6(PortAddresses.FLOW_METER_PORT);
         this.text = new Text("00.00");
         this.rotate1 = new Rotate();
         this.rotate2 = new Rotate();

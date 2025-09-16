@@ -1,45 +1,49 @@
-package IOPort;
+package oldShitGarbage;
 
-import java.io.*;
-import java.net.ServerSocket;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Communicator class is an instance of both
+ * Not totally sure if this is right
+ * Status does not send messages only receives and executes
  * Author: Youssef Amin, Natalie Onion, Daniel Thompson
  */
-public class CommunicatorServer extends IOPortServer implements Runnable {
+public class Shit2 extends Shit5 implements Runnable {
 
-    public CommunicatorServer(int port) {
+    public Shit2(int port) {
         super(port);
-        SERVER_UUID = UUID.randomUUID();
+        CLIENT_UUID = UUID.randomUUID();
         INBOX = new LinkedBlockingQueue<>();
     }
 
     /**
-     * closes client socket and then server socket
+     * closes sockets gracefully
      */
     @Override
     public void close() {
         try {
             CLIENT_SOCKET.close();
-            SERVER_SOCKET.close();
-            System.out.println("Server closed");
+            System.out.println("Client socket closed");
             ON = false;
         } catch (IOException e) {
-            System.out.println("Could not close client/server socket");
+            System.out.println("Could not close client socket");
+            throw new RuntimeException(e);
         }
     }
 
     /**
-     * Send messages to client
+     * Not used
      *
-     * @param message String for client
+     * @param message dont matter, not used.
      */
     @Override
     public void send(String message) {
-        WRITER.println(message);
+        System.out.println("YOU SHOULDN'T USE THIS!!!");
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -47,7 +51,11 @@ public class CommunicatorServer extends IOPortServer implements Runnable {
      */
     @Override
     public Object get() {
-        return INBOX.poll();
+        try {
+            return INBOX.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -66,7 +74,7 @@ public class CommunicatorServer extends IOPortServer implements Runnable {
         try {
             INBOX.add(LISTENER.readLine());
         } catch (IOException e) {
-            System.out.println("Closing server");
+            System.out.println("Could not receive message.");
             close();
         }
     }
@@ -76,15 +84,14 @@ public class CommunicatorServer extends IOPortServer implements Runnable {
      */
     @Override
     public void run() {
-        while(notConnected){
+        while (notConnected){
             try {
                 System.out.println("Trying " + PORT);
-                SERVER_SOCKET = new ServerSocket(PORT);
-                CLIENT_SOCKET = SERVER_SOCKET.accept();
+                connect(0);
                 LISTENER = new BufferedReader(new InputStreamReader(CLIENT_SOCKET.getInputStream()));
                 WRITER = new PrintWriter(CLIENT_SOCKET.getOutputStream(), true);
                 System.out.println("Server listening on port " + PORT);
-                notConnected = false;
+                 notConnected = false;
             } catch (Exception e) {
                 System.out.println("Could not start server on port " + PORT);
             }
@@ -95,7 +102,7 @@ public class CommunicatorServer extends IOPortServer implements Runnable {
             }
         }
         ON = true;
-        while (ON ) {
+        while (ON) {
             receive();
         }
     }

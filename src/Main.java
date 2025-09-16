@@ -1,8 +1,7 @@
-import IOPort.Actuator;
-import IOPort.IOPortClient;
-import IOPort.IOPortServer;
-import IOPort.*;
-import sim.Gas;
+import oldShitGarbage.Shit;
+import oldShitGarbage.Shit5;
+import oldShitGarbage.Shit3;
+import oldShitGarbage.*;
 import util.PortAddresses;
 
 import java.util.HashMap;
@@ -15,27 +14,27 @@ import java.util.UUID;
  */
 
 public class Main {
-    private static IOPortServer PUMP;
-    private static IOPortServer SCREEN;
-    private static IOPortServer CARD_COMPANY;
-    private static IOPortServer GAS_STATION;
-    private static IOPortClient CC_READER;
-    private static IOPortClient NOZZLE;
-    private static IOPortClient FLOWMETER;
-    private static Map<UUID, IOPortServer> ioPortServers;
-    private static Map<UUID, IOPortClient> ioPortClients;
-    private static Server SERVER;
+    private static Shit3 PUMP;
+    private static Shit3 SCREEN;
+    private static Shit3 CARD_COMPANY;
+    private static Shit3 GAS_STATION;
+    private static Shit5 CC_READER;
+    private static Shit5 NOZZLE;
+    private static Shit5 FLOWMETER;
+    private static Map<UUID, Shit3> ioPortServers;
+    private static Map<UUID, Shit5> ioPortClients;
+    private static Shit4 SERVER;
 
     /**
      * Instantiates server Runnables for Server class
      * @return HashMap of runnables to be passed to Server
      */
-    private static Map<UUID, IOPortServer> initializeServers(){
-        PUMP = new Actuator(PortAddresses.PUMP_PORT);
-        SCREEN = new CommunicatorServer(PortAddresses.SCREEN_PORT);
-        CARD_COMPANY =new CommunicatorServer(PortAddresses.CARD_COMPANY_PORT);
+    private static Map<UUID, Shit3> initializeServers(){
+        PUMP = new Shit(PortAddresses.PUMP_PORT);
+        SCREEN = new Shit6(PortAddresses.SCREEN_PORT);
+        CARD_COMPANY =new Shit6(PortAddresses.CARD_COMPANY_PORT);
         //GAS_STATION = new CommunicatorServer(PortAddresses.GAS_STATION_PORT);
-        Map<UUID,IOPortServer> ioPortServers = new HashMap<>();
+        Map<UUID, Shit3> ioPortServers = new HashMap<>();
         ioPortServers.put(PUMP.SERVER_UUID, PUMP);
         ioPortServers.put(SCREEN.SERVER_UUID, SCREEN);
         ioPortServers.put(CARD_COMPANY.SERVER_UUID, CARD_COMPANY);
@@ -47,11 +46,11 @@ public class Main {
      * Instatiates client Runnables for Server class
      * @return HashMaps of Runnables to be passed to Server
      */
-    private static Map<UUID,IOPortClient> initializeClients(){
-        CC_READER = new Status(PortAddresses.CARD_READER_PORT);
-        NOZZLE = new Status(PortAddresses.HOSE_PORT);
-        FLOWMETER = new Status(PortAddresses.FLOW_METER_PORT);
-        Map<UUID,IOPortClient> ioPortClients = new HashMap<>();
+    private static Map<UUID, Shit5> initializeClients(){
+        CC_READER = new Shit2(PortAddresses.CARD_READER_PORT);
+        NOZZLE = new Shit2(PortAddresses.HOSE_PORT);
+        FLOWMETER = new Shit2(PortAddresses.FLOW_METER_PORT);
+        Map<UUID, Shit5> ioPortClients = new HashMap<>();
         ioPortClients.put(CC_READER.CLIENT_UUID, CC_READER);
         ioPortClients.put(NOZZLE.CLIENT_UUID, NOZZLE);
         ioPortClients.put(FLOWMETER.CLIENT_UUID, FLOWMETER);
@@ -65,7 +64,7 @@ public class Main {
     public static void main(String[] args) {
         ioPortClients = initializeClients();
         ioPortServers = initializeServers();
-        SERVER = new Server(ioPortServers, ioPortClients);
+        SERVER = new Shit4(ioPortServers, ioPortClients);
         SERVER.startUp();
 
         boolean connected = false;

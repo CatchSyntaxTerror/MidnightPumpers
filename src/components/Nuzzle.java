@@ -3,7 +3,7 @@ package components;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import IOPort.*;
+import oldShitGarbage.*;
 import util.*;
 
 /**
@@ -17,10 +17,10 @@ public class Nuzzle {
     private Circle cirEnd;
     private boolean conCar;
     private boolean conPump;
-    private Actuator actuator;
+    private Shit actuator;
 
     public Nuzzle() {
-        this.actuator = new Actuator(PortAddresses.HOSE_PORT);
+        this.actuator = new Shit(PortAddresses.HOSE_PORT);
         this.line = null;
         this.cirHead = null;
         this.cirEnd = null;

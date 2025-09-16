@@ -1,4 +1,4 @@
-package IOPort;
+package oldShitGarbage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,8 +12,8 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Actuator only sends messages cant read or peek
  * Author: Youssef Amin, Natalie Onion, Daniel Thompson
  */
-public class Actuator extends IOPortServer implements Runnable {
-    public Actuator(int port) {
+public class Shit extends Shit3 implements Runnable {
+    public Shit(int port) {
         super(port);
         SERVER_UUID = UUID.randomUUID();
         INBOX = new LinkedBlockingQueue<>();

@@ -1,15 +1,19 @@
-package IOPort;
+package oldShitGarbage;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * This class is meant to be instantiated by JavaFX applications
+ * This class is meant to be instantiated by main
  * Author: Youssef Amin, Natalie Onion
  */
-public abstract class IOPortClient {
+public abstract class Shit3 {
+    protected ServerSocket SERVER_SOCKET;
     public Socket CLIENT_SOCKET;
     protected int PORT;
     protected String HOST;
@@ -17,12 +21,13 @@ public abstract class IOPortClient {
     public BufferedReader LISTENER;
     public PrintWriter WRITER;
     public volatile boolean ON;
-    public UUID CLIENT_UUID;
+    public UUID SERVER_UUID;
     public boolean notConnected = true;
 
-    public IOPortClient(int port) {
+    public Shit3(int port) {
         this.PORT = port;
         this.HOST = "localhost";
+        BlockingQueue<String> queue = new LinkedBlockingQueue<>();
     }
 
     /**
@@ -40,26 +45,4 @@ public abstract class IOPortClient {
     public abstract Object read();
 
     public abstract void receive();
-
-    /**
-     * This method handles server timing problems.
-     * Clients will try to connect over and over for 15 seconds
-     * @param n The starting value. n = 0 -> 15 seconds
-     */
-    protected void connect(int n) {
-        try {
-            CLIENT_SOCKET = new Socket(HOST, PORT);
-        } catch (Exception e) {
-            try {
-                Thread.sleep(1000);
-                if (n < 15) {
-                    connect(n + 1);
-                }
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-    }
 }
-
-
