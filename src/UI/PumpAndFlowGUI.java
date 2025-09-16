@@ -25,6 +25,8 @@ import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import sim.Gas;
 
+import java.util.Random;
+
 public class PumpAndFlowGUI extends Application {
     private static final AnchorPane anchorPane = new AnchorPane();
     private Flowmeter flowmeter;
@@ -156,11 +158,14 @@ public class PumpAndFlowGUI extends Application {
         Circle tempButtThread = new Circle(60,150,30,Color.GREEN);
         tempButtThread.setOnMouseClicked(event -> startThread(tempButtThread));
 
+        Circle tempButtGasType = new Circle(150,150,30,Color.YELLOW);
+        tempButtGasType.setOnMouseClicked(event -> setGasType());
         flowmeter.setRotate1(rotate1);
         flowmeter.setRotate2(rotate2);
         flowmeter.setProgressBar(progressBar);
         flowmeter.setText(text);
 
+        pump.setProgressBar(progressBar);
 
         valvePipe1.getTransforms().add(rotate1);
         valvePipe2.getTransforms().add(rotate2);
@@ -168,6 +173,7 @@ public class PumpAndFlowGUI extends Application {
         anchorPane.getChildren().add(tempButtOn);
         anchorPane.getChildren().add(tempButtOff);
         anchorPane.getChildren().add(tempButtThread);
+        anchorPane.getChildren().add(tempButtGasType);
         anchorPane.getChildren().add(leftFirstPipe);
         anchorPane.getChildren().add(rightFirstPipe);
         anchorPane.getChildren().add(progressBar);
@@ -192,12 +198,20 @@ public class PumpAndFlowGUI extends Application {
         System.out.println("off");
         timeline.stop();
     }
+    private void setGasType(){
+        Random random = new Random();
+        int gasType = random.nextInt(3) + 1;
+        pump.setGasType(gasType);
+    }
     private void startThread(Circle butt){
         if(flowmeter.connected()) {
             Thread thread = new Thread(flowmeter);
             thread.start();
             System.out.println("on");
+            Thread thread1 = new Thread(pump);
+            thread1.start();
             butt.setOnMouseClicked(event -> nothing() );
+
         }else {
             System.out.println("wait");
         }
