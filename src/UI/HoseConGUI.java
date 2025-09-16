@@ -64,10 +64,7 @@ public class HoseConGUI extends Application {
         images.add(new Image(getClass().getResource("/hoseCon3.png").toExternalForm()));
         images.add(new Image(getClass().getResource("/hoseCon4.png").toExternalForm()));
         images.add(new Image(getClass().getResource("/hoseCon5.png").toExternalForm()));
-        //images.add(new Image(getClass().getResource("/cartoon-gas-station-background.jpg").toExternalForm()));
-        //images.add(new Image("file:resources/background.jpg")); // replace with your own paths
-        //images.add(new Image("file:cartoon-gas-station-background.jpg"));
-        //images.add(new Image("file:images/img3.png"));
+
 
 
         ImageView imageView = new ImageView(images.get(currentIndex));
