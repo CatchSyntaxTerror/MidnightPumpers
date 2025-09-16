@@ -115,7 +115,7 @@ public class HoseConGUI extends Application {
         root.setStyle("-fx-background-color: #000000;");
         Scene scene = new Scene(root, 400, 300);
         stage.setScene(scene);
-        stage.setTitle("Image Switcher Example");
+        stage.setTitle("Hose Connection GUI");
         stage.show();
 
     }
