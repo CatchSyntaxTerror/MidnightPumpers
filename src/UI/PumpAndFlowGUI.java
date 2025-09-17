@@ -30,6 +30,7 @@ import java.util.Random;
 public class PumpAndFlowGUI extends Application {
     private static final AnchorPane anchorPane = new AnchorPane();
     private Flowmeter flowmeter;
+    private PFGUIhelper guiHelper;
     private Pump pump;
     private Gas gas = new Gas();
     private FuelTank fuelTank;
@@ -62,8 +63,11 @@ public class PumpAndFlowGUI extends Application {
 
         flowmeter = new Flowmeter();
         pump = new Pump();
+        guiHelper = new PFGUIhelper();
         flowmeter.setGas(gas);
         pump.setGas(gas);
+        guiHelper.setGas(gas);
+        guiHelper.setFlowmeter(flowmeter);
         Group root = new Group();
         anchorPane.setPrefHeight(750);
         anchorPane.setPrefWidth(1000);
@@ -160,10 +164,10 @@ public class PumpAndFlowGUI extends Application {
 
         Circle tempButtGasType = new Circle(150,150,30,Color.YELLOW);
         tempButtGasType.setOnMouseClicked(event -> setGasType());
-        flowmeter.setRotate1(rotate1);
-        flowmeter.setRotate2(rotate2);
-        flowmeter.setProgressBar(progressBar);
-        flowmeter.setText(text);
+        guiHelper.setRotate1(rotate1);
+        guiHelper.setRotate2(rotate2);
+        guiHelper.setProgressBar(progressBar);
+        guiHelper.setText(text);
 
         pump.setProgressBar(progressBar);
 
@@ -210,6 +214,8 @@ public class PumpAndFlowGUI extends Application {
             System.out.println("on");
             Thread thread1 = new Thread(pump);
             thread1.start();
+            Thread thread2 = new Thread(guiHelper);
+            thread2.start();
             butt.setOnMouseClicked(event -> nothing() );
 
         }else {
