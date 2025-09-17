@@ -126,7 +126,7 @@ public class GasStation extends Application {
         hose.setStroke(Color.GREENYELLOW);
         hose.setStrokeWidth(5);
 
-        this.flowmeter.setText(flowNum);
+        //this.flowmeter.setText(flowNum);
         this.pump.setRectangle(pump);
         this.nuzzle.setCirEnd(cirEnd);
         this.nuzzle.setCirHead(cirEnd);
@@ -157,12 +157,6 @@ public class GasStation extends Application {
         this.ccReader.sendCard();
     }
 
-    //Is a throw away function to test if I could change the text for pump
-    private void textFlow(Flowmeter flowmeter) {
-        for(int i = 0; i< 20;i++){
-            flowmeter.checkingFlow();
-        }
-    }
 
     private void hosetoPump(Nuzzle nuzzle,double x, double y){
         System.out.println("hose is on pump");
