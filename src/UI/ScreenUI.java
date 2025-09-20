@@ -11,6 +11,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.geometry.HPos;
 import util.MarkdownLanguage;
 
 
@@ -20,31 +21,17 @@ import util.MarkdownLanguage;
  */
 public class ScreenUI extends Application {
     // Constants:
-    private final double HORZ     =   0; // the horizontal gap of the grid
-    private final double VERT     =   0; // the vertical gap of the grid
-    private final double DISP_W   = 300; // the GUI's initial width
-    private final double DISP_H   = 250; // the GUI's initial height
+    private final double HORZ     =   15; // the horizontal gap of the grid
+    private final double VERT     =   2; // the vertical gap of the grid
+    private final double DISP_W   = 500; // the GUI's initial width
+    private final double DISP_H   = 350; // the GUI's initial height
     private final int  NUM_COLS   =   4; // number of columns on the grid
     private final int  NUM_ROWS   =   5; // number of columns on the grid
     private final int  BTN_FACTOR =   8; /* buttons take up an eighth of the
                                              horizontal space */
-    // CSS Style Strings
-    private final String BLACK_SCRN   =
-            "-fx-background-color: #000000;";
-    private final String WHITE_BACKGROUND =
-            "-fx-background-color: #FFFFFF;";
-    private final String SELECTED_BTN   =
-            "-fx-background-color: #000000, #F3DD00; -fx-background-insets: 0px, 3px;";
-    private final String UNSELECTED_BTN =
-            "-fx-background-color: #F3DD00, #000000; -fx-background-insets: 0px, 3px;";
-    private final String RESPONSIVE_BTN =
-            "-fx-background-color: #FFD2B2, #000000; -fx-background-insets: 0px, 4px;";
-    private final String ITALIC = "-fx-font-style: italic;";
-    private final String BOLD   = "-fx-font-weight: bold;";
-
     // Fonts
     private final Font SMALL_FNT = new Font(12);
-    private final Font MED_FNT   = new Font(15);
+    private final Font MED_FNT   = new Font(20);
     private final Font LRG_FNT   = new Font(20);
 
     // The Screen Object that this GUI is displaying
@@ -106,7 +93,7 @@ public class ScreenUI extends Application {
      */
     public void setBlank() {
         clearGP();
-        GRID_PANE.setStyle(WHITE_BACKGROUND);
+        GRID_PANE.getStyleClass().add("black_background");
     }
 
     /**
@@ -117,11 +104,11 @@ public class ScreenUI extends Application {
                 (observable, oldToggle, newToggle) -> {
             if (newToggle != null) {
                 // Set selected button color
-                ((ToggleButton) newToggle).setStyle(SELECTED_BTN);
+                ((ToggleButton) newToggle).getStyleClass().setAll("selected_btn");
             }
             if (oldToggle != null) {
                 // Set unselected button color
-                ((ToggleButton) oldToggle).setStyle(UNSELECTED_BTN);
+                ((ToggleButton) oldToggle).getStyleClass().setAll("unselected_btn");
             }
         });
     }
@@ -217,6 +204,7 @@ public class ScreenUI extends Application {
                 } else {
                     // Odd numbers on the right of the display
                     lbl = createLbl(rowI, 2, 1);
+                    GridPane.setHalignment(lbl, HPos.RIGHT); // Align label to the right
                 }
             }
             case 2 -> {
@@ -255,6 +243,7 @@ public class ScreenUI extends Application {
         //TODO make this an object rather than a bunch of primitive types
         Label lbl = createLbl(txtFields);
         lbl.setText(str);
+        lbl.getStyleClass().add("label");
         switch (fontSize) {
             case 0:
                 // Small
@@ -271,25 +260,25 @@ public class ScreenUI extends Application {
         switch (fontType) {
             case 0:
                 // Italic
-                lbl.setStyle(ITALIC);
+                lbl.getStyleClass().add("italic");
                 break;
             case 2:
                 // Bold
-                lbl.setStyle(BOLD);
+                lbl.getStyleClass().add("bold");
                 break;
             default:
                 // Regular font
         }
         switch (backColor) {
             case 0:
-                // Grey
-                lbl.setStyle(WHITE_BACKGROUND);
+                // Dark Purple
+                lbl.getStyleClass().add("purple_background");
             case 2:
-                // Light Blue
-                lbl.setStyle(WHITE_BACKGROUND);
+                // Dark Blue
+                lbl.getStyleClass().add("blue_background");
             default:
-                // White
-                lbl.setStyle(WHITE_BACKGROUND);
+                // Black
+                lbl.getStyleClass().add("black_background");
         }
     }
 
@@ -320,7 +309,7 @@ public class ScreenUI extends Application {
         hBox.setAlignment(Pos.CENTER);
 
         //Coloring
-        btn.setStyle(UNSELECTED_BTN);
+        btn.getStyleClass().add("unselected_btn");
 
         GRID_PANE.add(hBox, col, row);
         return btn;
@@ -355,7 +344,7 @@ public class ScreenUI extends Application {
         if (btnType == ButtonType.RESPONSIVE) {
             // Responsive Button
             // style
-            btn.setStyle(RESPONSIVE_BTN);
+            btn.getStyleClass().add("responsive_btn");
             btn.setOnMouseClicked(event -> {
                 // Notify the Communicator
                 notifyScreen(btnNumber, true);
@@ -418,13 +407,13 @@ public class ScreenUI extends Application {
 
         primaryStage.setTitle("Touch Screen Display");
         primaryStage.setScene(new Scene(screenUI.getScene(), DISP_W, DISP_H));
+        primaryStage.getScene().getStylesheets().add(
+                getClass().getResource("style.css").toExternalForm()
+        );
         primaryStage.show();
 
         scr.setScreen("t4-s0-f0-c0-text label one:t5-my next text box:t01-this field:b4m:b5m:b9x");
-        scr.setScreen("t01-Remove Nozzle and Select Fuel Grade:t2-$2.85:t3-$2.90:t4-$2.95:t5-$3.00:t8-Cancel:t9-Confirm:b2m:b3m:b4m:b5m:b8x:b9x");
-//        MarkdownLanguage.ButtonCommands bCs = new MarkdownLanguage.ButtonCommands();
-//        MarkdownLanguage.TextFieldCommands tCs = new MarkdownLanguage.TextFieldCommands();
-//        scr.setScreen(new MarkdownLanguage.Commands(bCs, tCs));
+        scr.setScreen("t01-Remove Nozzle, Select Fuel Grade:t2-$2.85:t3-$2.90:t4-$2.95:t5-$3.00:t8-Cancel:t9-Confirm:b2m:b3m:b4m:b5m:b8x:b9x");
     }
 }
 

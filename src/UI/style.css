@@ -1,0 +1,44 @@
+/* style.css */
+
+/* Backgrounds */
+.black_background {
+    -fx-background-color: #000000;
+}
+
+.white_background {
+    -fx-background-color: #FFFFFF;
+}
+
+
+/* Buttons */
+.selected_btn {
+    -fx-background-color: #000000, #F3DD00;
+    -fx-background-insets: 0px, 3px;
+    /*-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 5, 5);*/
+}
+
+.unselected_btn {
+    -fx-background-color: #F3DD00, #000000;
+    -fx-background-insets: 0px, 3px;
+}
+
+.responsive_btn {
+    -fx-background-color: #FFD2B2, #000000;
+    -fx-background-insets: 0px, 4px;
+}
+
+
+/* Label */
+.label{
+    -fx-text-fill: white;
+    -fx-font-family: "Times New Roman", Times, serif;
+}
+
+/* Fonts */
+.italic {
+    -fx-font-style: italic;
+}
+
+.bold {
+    -fx-font-weight: bold;
+}
